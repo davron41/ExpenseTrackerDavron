@@ -1,8 +1,9 @@
-﻿using ExpenseTracker.Domain.Enums;
+﻿using ExpenseTracker.Domain.Common;
+using ExpenseTracker.Domain.Enums;
 
 namespace ExpenseTracker.Domain.Entities
 {
-    public class Transfer
+    public class Transfer : AuditableEntity
     {
         public string Title { get; set; }
         public string? Description { get; set; }
