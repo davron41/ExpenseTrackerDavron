@@ -1,9 +1,8 @@
-﻿namespace ExpenseTracker.Domain.Interfaces
+﻿namespace ExpenseTracker.Domain.Interfaces;
+
+public interface ICommonRepository
 {
-    public interface ICommonRepository
-    {
-        ITransferRepository Transfers { get; }
-        ICategoryRepository Categories { get; }
-        public int SaveChanges();
-    }
+    ITransferRepository Transfers { get; }
+    ICategoryRepository Categories { get; }
+    public int SaveChanges();
 }
