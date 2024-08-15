@@ -1,29 +1,63 @@
-﻿using ExpenseTracker.Domain.Entities;
-using ExpenseTracker.Domain.Interfaces;
+﻿using ExpenseTracker.Domain.Interfaces;
+using ExpenseTracker.Mappings;
+using ExpenseTracker.Stores.Interfaces;
+using ExpenseTracker.ViewModels.Category;
 
-namespace ExpenseTracker.Stores
+namespace ExpenseTracker.Stores;
+
+public class CategoryStore : ICategoryStore
 {
-    public interface ICategoryStore
+    private readonly ICommonRepository _repository;
+
+    public CategoryStore(ICommonRepository repository)
     {
-        void Add(Category category);
+        _repository = repository;
     }
-    public class CategoryStore : ICategoryStore
+
+    public List<CategoryViewModel> GetAll(string? search)
     {
-        private readonly ICategoryRepository _categoryRepository;
-        public CategoryStore(ICategoryRepository categoryRepository)
-        {
-            _categoryRepository = categoryRepository;
-        }
-        public void Add(Category category)
-        {
-            _categoryRepository.Create(category);
-        }
+        var entities = _repository.Categories.GetAll();
+        var viewModels = entities
+            .Select(x => x.ToViewModel())
+            .ToList();
+
+        return viewModels;
     }
-    public class NewCategoryStore : ICategoryStore
+
+    public CategoryViewModel GetById(int id)
     {
-        public void Add(Category category)
-        {
-            throw new NotImplementedException();
-        }
+        var entity = _repository.Categories.GetById(id);
+
+        return entity.ToViewModel();
+    }
+
+    public CategoryViewModel Create(CreateCategoryViewModel category)
+    {
+        ArgumentNullException.ThrowIfNull(category);
+
+        var entity = category.ToEntity();
+        entity.CreatedAt = DateTime.Now;
+
+        var createdEntity = _repository.Categories.Create(entity);
+        _repository.SaveChanges();
+
+        return createdEntity.ToViewModel();
+    }
+
+    public void Update(UpdateCategoryViewModel category)
+    {
+        ArgumentNullException.ThrowIfNull(category);
+
+        var entity = category.ToEntity();
+        entity.UpdatedAt = DateTime.Now;
+
+        _repository.Categories.Update(entity);
+        _repository.SaveChanges();
+    }
+
+    public void Delete(int id)
+    {
+        _repository.Categories.Delete(id);
+        _repository.SaveChanges();
     }
 }
