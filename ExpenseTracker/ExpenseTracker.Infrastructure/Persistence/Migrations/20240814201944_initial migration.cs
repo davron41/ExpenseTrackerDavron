@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace ExpenseTracker.Infrastructure.Migrations
+namespace ExpenseTracker.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class initialmigration : Migration

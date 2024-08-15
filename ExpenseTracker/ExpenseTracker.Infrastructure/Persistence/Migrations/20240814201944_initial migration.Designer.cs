@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ExpenseTracker.Infrastructure.Migrations
+namespace ExpenseTracker.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ExpenseTrackerDbContext))]
-    [Migration("20240814202946_Add-Default-Category-Data")]
-    partial class AddDefaultCategoryData
+    [Migration("20240814201944_initial migration")]
+    partial class initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,36 +51,6 @@ namespace ExpenseTracker.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Category", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2024, 8, 14, 20, 29, 45, 678, DateTimeKind.Utc).AddTicks(441),
-                            Description = "Monthly grocery expenses",
-                            Name = "Grocery"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2024, 8, 14, 20, 29, 45, 678, DateTimeKind.Utc).AddTicks(444),
-                            Description = "Monthly grocery expenses",
-                            Name = "Community services"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2024, 8, 14, 20, 29, 45, 678, DateTimeKind.Utc).AddTicks(445),
-                            Description = "Regular job income",
-                            Name = "Salary"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedAt = new DateTime(2024, 8, 14, 20, 29, 45, 678, DateTimeKind.Utc).AddTicks(446),
-                            Description = "Side hustle",
-                            Name = "Other incomes"
-                        });
                 });
 
             modelBuilder.Entity("ExpenseTracker.Domain.Entities.Transfer", b =>

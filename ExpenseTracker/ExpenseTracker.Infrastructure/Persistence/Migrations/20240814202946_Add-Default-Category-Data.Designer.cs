@@ -4,16 +4,19 @@ using ExpenseTracker.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ExpenseTracker.Infrastructure.Migrations
+namespace ExpenseTracker.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ExpenseTrackerDbContext))]
-    partial class ExpenseTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240814202946_Add-Default-Category-Data")]
+    partial class AddDefaultCategoryData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

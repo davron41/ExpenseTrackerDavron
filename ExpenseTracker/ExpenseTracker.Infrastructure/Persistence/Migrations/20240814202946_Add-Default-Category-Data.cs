@@ -4,7 +4,7 @@
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace ExpenseTracker.Infrastructure.Migrations
+namespace ExpenseTracker.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class AddDefaultCategoryData : Migration
