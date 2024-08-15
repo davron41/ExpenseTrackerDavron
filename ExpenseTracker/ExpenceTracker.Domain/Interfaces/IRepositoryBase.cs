@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ExpenseTracker.Domain.Common;
 
 namespace ExpenseTracker.Domain.Interfaces
 {
-    internal interface IRepositoryBase
+    public interface IRepositoryBase<TEntity> where TEntity : EntityBase
     {
+        List<TEntity> GetAll();
+        TEntity GetById(int id);
+        TEntity Create(TEntity entity);
+        void Update(TEntity entity);
+        void Delete(int id);
     }
 }

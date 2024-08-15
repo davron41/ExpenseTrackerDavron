@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ExpenseTracker.Domain.Entities;
 
 namespace ExpenseTracker.Domain.Interfaces
 {
-    internal interface ITransferRepository
+    public interface ITransferRepository : IRepositoryBase<Transfer>
     {
+        List<Transfer> GetAll(string? search);
+        List<Transfer> GetAll(decimal? minAmount, decimal? maxAmount);
+
     }
 }

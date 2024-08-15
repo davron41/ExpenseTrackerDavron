@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ExpenseTracker.Domain.Interfaces
+﻿namespace ExpenseTracker.Domain.Interfaces
 {
-    internal interface ICommonRepository
+    public interface ICommonRepository
     {
+        ITransferRepository Transfers { get; }
+        ICategoryRepository Categories { get; }
+        public int SaveChanges();
     }
 }
