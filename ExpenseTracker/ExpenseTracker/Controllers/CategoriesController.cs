@@ -1,90 +1,145 @@
-﻿using ExpenseTracker.Infrastructure;
-using ExpenseTracker.Infrastructure.Repositories;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ExpenseTracker.Stores.Interfaces;
+using ExpenseTracker.ViewModels.Category;
 using ExpenseTracker.Stores;
-using Microsoft.AspNetCore.Mvc;
+using ExpenseTracker.Infrastructure.Repositories;
+using ExpenseTracker.Mappings;
 
-namespace ExpenseTracker.Controllers
+namespace ExpenseTracker.Controllers;
+
+public class CategoriesController : Controller
 {
-    public class CategoriesController : Controller
+    private readonly ICategoryStore _store;
+
+    public CategoriesController(ICategoryStore store)
     {
-        private readonly ICategoryStore _categoryStore;
-        public CategoriesController(ICategoryStore store)
+        _store = store;
+    }
+
+    public IActionResult Index()
+    {
+        var result = _store.GetAll("");
+
+        return View(result);
+    }
+
+    public IActionResult Details(int? id)
+    {
+        if (id == null)
         {
-           
-        }
-        // GET: CategoriesController
-        public ActionResult Index()
-        {
-            return View();
+            return NotFound();
         }
 
-        // GET: CategoriesController/Details/5
-        public ActionResult Details(int id)
+        var result = _store.GetById(id.Value);
+
+        return View(result);
+    }
+
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Create(CreateCategoryViewModel category)
+    {
+        if (!ModelState.IsValid)
         {
-            return View();
+            return View(category);
         }
 
-        // GET: CategoriesController/Create
-        public ActionResult Create()
+        var createdCategory = _store.Create(category);
+
+        return RedirectToAction(nameof(Details), new { id = createdCategory.Id });
+    }
+
+    public IActionResult Edit(int? id)
+    {
+        if (id == null)
         {
-            return View();
+            return NotFound();
         }
 
-        // POST: CategoriesController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        var category = _store.GetById(id.Value);
+
+        if (category is null)
+        {
+            return NotFound();
+        }
+
+        var viewModel = category.ToViewModel();
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Edit(int id, UpdateCategoryViewModel category)
+    {
+        if (id != category.Id)
+        {
+            return NotFound();
+        }
+
+        if (ModelState.IsValid)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _store.Update(category);
             }
-            catch
+            catch (DbUpdateConcurrencyException)
             {
-                return View();
+                if (!CategoryExists(category.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
+
+            return RedirectToAction(nameof(Index));
+        }
+        return View(category);
+    }
+
+    public IActionResult Delete(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
         }
 
-        // GET: CategoriesController/Edit/5
-        public ActionResult Edit(int id)
+        var category = _store.GetById(id.Value);
+
+        if (category is null)
         {
-            return View();
+            return NotFound();
         }
 
-        // POST: CategoriesController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        return View(category);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public IActionResult DeleteConfirmed(int id)
+    {
+        var category = _store.GetById(id);
+
+        if (category is null)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return NotFound();
         }
 
-        // GET: CategoriesController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        _store.Delete(id);
+        return RedirectToAction(nameof(Index));
+    }
 
-        // POST: CategoriesController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+    private bool CategoryExists(int id)
+    {
+        return _store.GetById(id) is not null;
     }
 }
