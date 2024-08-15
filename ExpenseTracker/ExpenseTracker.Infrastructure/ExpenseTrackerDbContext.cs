@@ -8,6 +8,7 @@ namespace ExpenseTracker.Infrastructure
     {
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Transfer> Transfers { get; set; }
+
         public ExpenseTrackerDbContext(DbContextOptions<ExpenseTrackerDbContext> options):base(options)
         {
             
