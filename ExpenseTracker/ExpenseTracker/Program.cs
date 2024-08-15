@@ -16,6 +16,9 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICommonRepository, CommonRepository>();
 builder.Services.AddScoped<ICategoryStore, CategoryStore>();
 
+builder.Services.AddScoped<ITransferRepository, TransferRepository>();
+builder.Services.AddScoped<ITransferStore, TransferStore>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
