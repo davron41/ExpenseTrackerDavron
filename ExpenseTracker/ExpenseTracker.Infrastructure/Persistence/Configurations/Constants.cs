@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ExpenseTracker.Infrastructure.Persistence.Configurations
+﻿namespace ExpenseTracker.Infrastructure.Persistence.Configurations
 {
-    public class Constants
+    internal static class Constants
     {
+        public const int DEFAULT_STRING_LENGTH = 255;
+        public const int MAX_STRING_LENGTH = 500;
     }
 }
