@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ExpenseTracker.Domain.Common
+﻿namespace ExpenseTracker.Domain.Common
 {
-    public class AuditableEntity
+    public abstract class AuditableEntity : EntityBase
     {
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        protected AuditableEntity() 
+        protected AuditableEntity()
         {
             CreatedAt = DateTime.UtcNow;
         }
