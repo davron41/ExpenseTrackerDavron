@@ -3,6 +3,7 @@ using ExpenseTracker.Domain.Interfaces;
 using ExpenseTracker.Mappings;
 using ExpenseTracker.Stores.Interfaces;
 using ExpenseTracker.ViewModels.Transfer;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.View;
 
 namespace ExpenseTracker.Stores
 {
@@ -29,7 +30,9 @@ namespace ExpenseTracker.Stores
         {
             var transfer=_repository.Transfers.GetById(id);
             
-            return transfer.ToViewModel();
+            var viewModel= transfer.ToViewModel();
+
+            return viewModel;
         }
         public TransferViewModel Create(CreateTransferViewModel transfer)
         {
@@ -37,6 +40,8 @@ namespace ExpenseTracker.Stores
 
             var entity=transfer.ToEntity();
             
+            entity.CreatedAt=DateTime.Now;
+
             var createdTransfer=_repository.Transfers.Create(entity);
             _repository.SaveChanges();
 
@@ -48,6 +53,7 @@ namespace ExpenseTracker.Stores
             ArgumentNullException.ThrowIfNull(transfer);
 
             var entity=transfer.ToEntity(); 
+            entity.UpdatedAt=DateTime.Now;
 
             _repository.Transfers.Update(entity);
             _repository.SaveChanges();
