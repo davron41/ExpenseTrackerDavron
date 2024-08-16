@@ -7,4 +7,8 @@ public class CategoryViewModel
     public string? Description { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    public override string ToString()
+    {
+        return $"{Name}";
+    }
 }
