@@ -1,4 +1,5 @@
-﻿@using ExpenseTracker.Domain.Enums
+﻿@using ExpenseTracker.Domain.Entities
+@using ExpenseTracker.Domain.Enums
 
 @model ExpenseTracker.ViewModels.Transfer.TransferViewModel
 
@@ -34,7 +35,13 @@
                 <select asp-for="Type" asp-items="Html.GetEnumSelectList<TransferType>()" class="form-control"></select>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
-           
+            <div class="form-group">
+                <div class="ms-2">
+                    <ejs-combobox class="form-select" name="categoryId" id="categories-combobox" value="@ViewBag.Value"  dataSource="@ViewBag.Categories" popupHeight="220px">
+                        <e-combobox-fields value="Id" text="Name"></e-combobox-fields>
+                    </ejs-combobox>
+                </div>
+            </div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

@@ -34,9 +34,9 @@
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <input asp-for="CategoryId" class="form-control"></input>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    <ejs-combobox name="categoryId" id="categories-combobox" dataSource="@ViewBag.Categories" placeholder="Select a category" popupHeight="220px">
+                        <e-combobox-fields value="Id" text="Name"></e-combobox-fields>
+                    </ejs-combobox>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
