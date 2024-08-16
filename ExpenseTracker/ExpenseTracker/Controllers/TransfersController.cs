@@ -9,16 +9,19 @@ using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Infrastructure;
 using ExpenseTracker.Stores.Interfaces;
 using ExpenseTracker.ViewModels.Transfer;
+using ExpenseTracker.Mappings;
 
 namespace ExpenseTracker.Controllers
 {
     public class TransfersController : Controller
     {
         private readonly ITransferStore _store;
+        private readonly ICategoryStore _categoryStore;
 
-        public TransfersController(ITransferStore store)
+        public TransfersController(ITransferStore store, ICategoryStore categoryStore)
         {
-            _store=store;
+            _store = store;
+            _categoryStore = categoryStore;
         }
 
         public IActionResult Index()
@@ -47,6 +50,8 @@ namespace ExpenseTracker.Controllers
 
         public IActionResult Create()
         {
+            var categories = _categoryStore.GetAll("");
+            ViewBag.Categories = categories;
             return View();
         }
 
@@ -58,8 +63,8 @@ namespace ExpenseTracker.Controllers
             {
                 return View(transfer);
             }
-
             var createdTransfer=_store.Create(transfer);
+
 
             return RedirectToAction(nameof(Details), new {id=createdTransfer.Id});
         }
@@ -72,6 +77,12 @@ namespace ExpenseTracker.Controllers
             }
 
             var transfer =_store.GetById(id.Value);
+
+            var categories = _categoryStore.GetAll("");
+            ViewBag.Categories = categories;
+
+            var category = categories.FirstOrDefault(x => x.Id == transfer.CategoryId);
+            ViewBag.Value=category;
 
             if (transfer is null)
             {
