@@ -9,5 +9,6 @@ namespace ExpenseTracker.ViewModels.Transfer
         public string? Description { get; set; }
         public decimal Amount { get; set; }
         public TransferType Type { get; set; }
+        public int CategoryId { get; set; }
     }
 }
