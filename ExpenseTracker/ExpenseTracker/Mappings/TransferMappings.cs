@@ -14,6 +14,7 @@ namespace ExpenseTracker.Mappings
                 Id = transfer.Id,
                 Title = transfer.Title,
                 Type = transfer.Type,
+                CategoryId = transfer.CategoryId,
             };
         }
         public static Transfer ToEntity(this CreateTransferViewModel transfer)
@@ -24,6 +25,7 @@ namespace ExpenseTracker.Mappings
                 Description = transfer.Description,
                 Title = transfer.Title,
                 Type = transfer.Type,
+                CategoryId=transfer.CategoryId,
             };
         }
         public static Transfer ToEntity(this TransferViewModel transfer)
@@ -35,6 +37,7 @@ namespace ExpenseTracker.Mappings
                 Title = transfer.Title,
                 Type = transfer.Type,
                 Id = transfer.Id,
+                CategoryId=transfer.CategoryId
             };
         }
     }
