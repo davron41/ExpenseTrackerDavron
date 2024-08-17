@@ -2,30 +2,26 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ExpenseTracker.Infrastructure.Persistence.Configurations
+namespace ExpenseTracker.Infrastructure.Persistence.Configurations;
+
+internal class TransferConfiguration : IEntityTypeConfiguration<Transfer>
 {
-    internal class TransferConfiguration : IEntityTypeConfiguration<Transfer>
+    public void Configure(EntityTypeBuilder<Transfer> builder)
     {
-        public void Configure(EntityTypeBuilder<Transfer> builder)
-        {
-            builder.ToTable(nameof(Transfer));
+        builder.ToTable(nameof(Transfer));
 
-            builder.HasOne(x => x.Category)
-                .WithMany(c => c.Transfers)
-                .HasForeignKey(x => x.CategoryId);
+        builder.Navigation(t => t.Category).AutoInclude();
 
-            builder.Property(x => x.Title)
-                .HasMaxLength(Constants.DEFAULT_STRING_LENGTH)
-                .HasColumnName("Name")
-                .IsRequired();
+        builder.HasOne(t => t.Category)
+            .WithMany(c => c.Transfers)
+            .HasForeignKey(t => t.CategoryId);
 
-            builder.Property(x => x.Description)
-                .HasMaxLength(Constants.MAX_STRING_LENGTH)
-                .IsRequired(false);
+        builder.Property(t => t.Note)
+            .HasMaxLength(Constants.DEFAULT_STRING_LENGTH)
+            .IsRequired(false);
 
-            builder.Property(x => x.Amount)
-                .HasPrecision(13, 2)
-                .IsRequired();
-        }
+        builder.Property(t => t.Amount)
+            .HasPrecision(13, 2)
+            .IsRequired();
     }
 }
