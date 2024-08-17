@@ -1,5 +1,4 @@
-﻿using ExpenseTracker.Domain.Entities;
-using ExpenseTracker.ViewModels.Transfer;
+﻿using ExpenseTracker.ViewModels.Transfer;
 
 namespace ExpenseTracker.Stores.Interfaces
 {
@@ -7,8 +6,9 @@ namespace ExpenseTracker.Stores.Interfaces
     {
         List<TransferViewModel> GetAll(string? search);
         TransferViewModel GetById(int id);
+        UpdateTransferViewModel GetForUpdate(int id);
         TransferViewModel Create(CreateTransferViewModel transfer);
-        void Update(TransferViewModel transfer);
+        void Update(UpdateTransferViewModel transfer);
         void Delete(int id);
     }
 }
