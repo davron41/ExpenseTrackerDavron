@@ -1,14 +1,11 @@
-﻿using ExpenseTracker.Domain.Enums;
+﻿using ExpenseTracker.ViewModels.Category;
 
-namespace ExpenseTracker.ViewModels.Transfer
+namespace ExpenseTracker.ViewModels.Transfer;
+
+public class TransferViewModel
 {
-    public class TransferViewModel
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }=string.Empty;
-        public string? Description { get; set; }
-        public decimal Amount { get; set; }
-        public TransferType Type { get; set; }
-        public int CategoryId { get; set; }
-    }
+    public int Id { get; set; }
+    public string? Note { get; set; }
+    public decimal Amount { get; set; }
+    public CategoryViewModel Category { get; set; }
 }
