@@ -36,7 +36,6 @@ public class CategoryStore : ICategoryStore
         ArgumentNullException.ThrowIfNull(category);
 
         var entity = category.ToEntity();
-        entity.CreatedAt = DateTime.Now;
 
         var createdEntity = _repository.Categories.Create(entity);
         _repository.SaveChanges();
@@ -49,7 +48,6 @@ public class CategoryStore : ICategoryStore
         ArgumentNullException.ThrowIfNull(category);
 
         var entity = category.ToEntity();
-        entity.UpdatedAt = DateTime.Now;
 
         _repository.Categories.Update(entity);
         _repository.SaveChanges();
