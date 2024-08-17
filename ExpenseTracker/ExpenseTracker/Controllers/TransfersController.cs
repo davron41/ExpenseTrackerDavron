@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using ExpenseTracker.Domain.Entities;
-using ExpenseTracker.Infrastructure;
+﻿using ExpenseTracker.Mappings;
 using ExpenseTracker.Stores.Interfaces;
 using ExpenseTracker.ViewModels.Transfer;
-using ExpenseTracker.Mappings;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Controllers
 {
@@ -63,10 +56,10 @@ namespace ExpenseTracker.Controllers
             {
                 return View(transfer);
             }
-            var createdTransfer=_store.Create(transfer);
+            var createdTransfer = _store.Create(transfer);
 
 
-            return RedirectToAction(nameof(Details), new {id=createdTransfer.Id});
+            return RedirectToAction(nameof(Details), new { id = createdTransfer.Id });
         }
 
         public IActionResult Edit(int? id)
@@ -76,25 +69,22 @@ namespace ExpenseTracker.Controllers
                 return NotFound();
             }
 
-            var transfer =_store.GetById(id.Value);
+            var viewModel = _store.GetForUpdate(id.Value);
 
-            var categories = _categoryStore.GetAll("");
-            ViewBag.Categories = categories;
-
-            var category = categories.FirstOrDefault(x => x.Id == transfer.CategoryId);
-            ViewBag.Value=category;
-
-            if (transfer is null)
+            if (viewModel is null)
             {
                 return NotFound();
             }
 
-            return View(transfer);
+            var categories = _categoryStore.GetAll("");
+            ViewBag.Categories = categories;
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, TransferViewModel transfer)
+        public IActionResult Edit(int id, UpdateTransferViewModel transfer)
         {
             if (id != transfer.Id)
             {
@@ -105,7 +95,7 @@ namespace ExpenseTracker.Controllers
             {
                 try
                 {
-                   _store.Update(transfer);
+                    _store.Update(transfer);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -123,14 +113,14 @@ namespace ExpenseTracker.Controllers
             return View(transfer);
         }
 
-        public  IActionResult Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var transfer=_store.GetById(id.Value);
+            var transfer = _store.GetById(id.Value);
 
             if (transfer is null)
             {
@@ -144,7 +134,7 @@ namespace ExpenseTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var transfer=_store.GetById(id);
+            var transfer = _store.GetById(id);
 
             if (transfer is null)
             {
@@ -152,7 +142,7 @@ namespace ExpenseTracker.Controllers
             }
 
             _store.Delete(id);
-            
+
             return RedirectToAction(nameof(Index));
         }
 

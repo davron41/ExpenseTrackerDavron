@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using ExpenseTracker.Mappings;
 using ExpenseTracker.Stores.Interfaces;
 using ExpenseTracker.ViewModels.Category;
-using ExpenseTracker.Stores;
-using ExpenseTracker.Infrastructure.Repositories;
-using ExpenseTracker.Mappings;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Controllers;
 
@@ -69,7 +67,7 @@ public class CategoriesController : Controller
             return NotFound();
         }
 
-        var viewModel = category.ToViewModel();
+        var viewModel = category.ToUpdateViewModel();
 
         return View(viewModel);
     }
