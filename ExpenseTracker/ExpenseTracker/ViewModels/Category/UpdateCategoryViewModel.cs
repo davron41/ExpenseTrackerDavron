@@ -3,4 +3,5 @@
 public class UpdateCategoryViewModel : CreateCategoryViewModel
 {
     public int Id { get; set; }
+
 }
