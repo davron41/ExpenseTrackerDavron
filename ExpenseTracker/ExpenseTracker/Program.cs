@@ -1,14 +1,14 @@
 using ExpenseTracker.Domain.Interfaces;
-using ExpenseTracker.Infrastructure.Repositories;
 using ExpenseTracker.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using ExpenseTracker.Stores.Interfaces;
+using ExpenseTracker.Infrastructure.Repositories;
 using ExpenseTracker.Stores;
+using ExpenseTracker.Stores.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation() ;
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NCaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXdedHRQRGRZWEV+WkQ=");
 
