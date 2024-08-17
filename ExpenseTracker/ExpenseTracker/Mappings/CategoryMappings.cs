@@ -12,17 +12,19 @@ public static class CategoryMappings
             Id = category.Id,
             Name = category.Name,
             Description = category.Description,
+            Type = category.Type,
             CreatedAt = category.CreatedAt,
             UpdatedAt = category.UpdatedAt,
         };
     }
 
-    public static UpdateCategoryViewModel ToViewModel(this CategoryViewModel category)
+    public static UpdateCategoryViewModel ToUpdateViewModel(this CategoryViewModel category)
     {
         return new UpdateCategoryViewModel
         {
             Id = category.Id,
             Name = category.Name,
+            Type = category.Type,
             Description = category.Description
         };
     }
@@ -33,9 +35,9 @@ public static class CategoryMappings
         {
             Name = category.Name,
             Description = category.Description,
+            Type = category.Type,
         };
     }
-        
 
     public static Category ToEntity(this UpdateCategoryViewModel category)
     {
@@ -44,6 +46,7 @@ public static class CategoryMappings
             Id = category.Id,
             Name = category.Name,
             Description = category.Description,
+            Type = category.Type,
         };
     }
 }
