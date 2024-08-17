@@ -15,9 +15,9 @@ namespace ExpenseTracker.Infrastructure.Repositories
                 return GetAll();
             }
 
-            var transfers = _context.Transfers.Where(x => x.Title.Contains(search) ||
-            (x.Description != null && x.Description.Contains(search))
-            ).ToList();
+            var transfers = _context.Transfers
+                .Where(x => x.Note != null && x.Note.Contains(search))
+                .ToList();
 
             return transfers;
         }
