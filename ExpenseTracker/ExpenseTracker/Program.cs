@@ -1,4 +1,5 @@
 using ExpenseTracker.Domain.Interfaces;
+using ExpenseTracker.Extensions;
 using ExpenseTracker.Infrastructure;
 using ExpenseTracker.Infrastructure.Repositories;
 using ExpenseTracker.Stores;
@@ -11,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NCaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXdedHRQRGRZWEV+WkQ=");
-
 
 builder.Services.AddDbContext<ExpenseTrackerDbContext>(options =>
     options.UseSqlServer("Data Source=desktop-fb3ogeq;Initial Catalog=ExpenseTracker;Integrated Security=True;Trust Server Certificate=True"));
@@ -30,6 +30,12 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+else
+{
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<ExpenseTrackerDbContext>();
+    DatabaseInitializer.SeedDatabase(context);
 }
 
 app.UseHttpsRedirection();
