@@ -21,31 +21,6 @@ namespace ExpenseTracker.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Description)
                 .HasMaxLength(Constants.MAX_STRING_LENGTH)
                 .IsRequired(false);
-
-            builder.HasData(
-                new Category
-                {
-                    Id = 1,
-                    Name = "Grocery",
-                    Description = "Monthly grocery expenses"
-                },
-                new Category
-                {
-                    Id = 2,
-                    Name = "Community services",
-                    Description = "Monthly grocery expenses"
-                },
-                new Category
-                {
-                    Id = 3,
-                    Name = "Salary",
-                    Description = "Regular job income"
-                }, new Category
-                {
-                    Id = 4,
-                    Name = "Other incomes",
-                    Description = "Side hustle"
-                });
         }
     }
 }
