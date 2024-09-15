@@ -1,0 +1,114 @@
+﻿@model IEnumerable<ExpenseTracker.ViewModels.Transfer.TransferViewModel>
+
+@{
+    ViewData["PageTitle"] = "Transactions";
+    ViewData["PageActionUrl"] = "/transfers/create";
+}
+
+<div >
+    <form method="get" class="mb">
+        <div class="form-container d-flex justify-content-between">
+            <div class="d-flex gap-3">
+                <ejs-textbox id="search-box" 
+                             name="search"
+                             placeholder="Search transfers" 
+                             floatLabelType="Never" 
+                             width="300px" 
+                             value="@ViewBag.Search"
+                             input="onSearchChange">
+                </ejs-textbox>
+                <ejs-combobox id="categories"
+                              name="categoryId"
+                              placeholder="Select category" 
+                              floatLabelType="Never" 
+                              width="250px" 
+                              dataSource="@ViewBag.Categories" 
+                              value="@ViewBag.SelectedCategory"
+                              allowObjectBinding="true"
+                              change="onCategoryChange">
+                        <e-combobox-fields value="Id" text="Name"></e-combobox-fields>
+                </ejs-combobox>
+            </div>
+            <a class="btn btn-success" asp-action="Create"> + Transfer</a>
+        </div>
+    </form>
+</div>
+
+<div class=" mt-4">
+    <ejs-grid id="transactions" 
+              dataSource="@Model" 
+              allowSorting="true" 
+              allowPaging="true">
+        <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+        <e-grid-columns>
+            <e-grid-column headerText="Id" width="50px" field="Id" template="#navigationColumnTemplate"></e-grid-column>
+            <e-grid-column headerText="Category" field="Category.Name"></e-grid-column>
+            <e-grid-column headerText="Date" field="Date" type="Date" format="dd-MMM-yyyy"></e-grid-column>
+            <e-grid-column headerText="Amount" field="Amount" textAlign="Right"></e-grid-column>
+            <e-grid-column headerText="Note" field="Note"></e-grid-column>
+            <e-grid-column headerText="Actions" template="#actionColumnTemplate"></e-grid-column>
+        </e-grid-columns>
+    </ejs-grid>
+</div>
+
+
+<script id="actionColumnTemplate" type="text/x-template">
+    <div class="d-flex flex-row justify-content-start">
+        <a class="btn btn-sm no-a-decoration" href="/transfers/edit/${Id}">
+            <i class="fa-solid fa-pen fa-lg"></i>
+        </a>
+        <a class="btn btn-sm no-a-decoration" href="/transfers/delete/${Id}">
+            <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
+        </a>
+    </div>
+</script>
+
+<script id="navigationColumnTemplate" type="text/x-template">
+    <div>
+        <a rel="nofollow" href="transfers/details/${Id}">${Id}</a>
+    </div>
+</script>
+
+<script>
+    function onCategoryChange(args) {
+        if (!args) { 
+            return; 
+        }
+
+        const searchBox = document.getElementById("search-box")?.ej2_instances[0];
+        const search = searchBox?.previousValue;
+        const selectedCategoryId = args.itemData.Id;
+        
+        $.ajax({
+            type: 'GET',
+            url: `/getTransfers?search=${search}&categoryId=${selectedCategoryId}`,
+            contentType: 'json',
+            success: function (data) {
+                const grid = document.getElementById("transactions").ej2_instances[0];
+                grid.dataSource = data;
+                grid.refresh();
+            }
+        });
+    }
+
+    function onSearchChange(args) {
+        if (!args) {
+            return;
+        }
+
+        const search = args.value;
+        const categoryCombobox = document.getElementById("categories")?.ej2_instances[0];
+        const selectedCategoryId = categoryCombobox?.itemData?.Id;
+
+        $.ajax({
+            type: 'GET',
+            url: `/getTransfers?search=${search}&categoryId=${selectedCategoryId}`,
+            contentType: 'json',
+            success: function (data) {
+                const grid = document.getElementById("transactions").ej2_instances[0];
+                grid.dataSource = data;
+                grid.refresh();
+            }
+        });
+    }
+</script>

@@ -1,0 +1,47 @@
+﻿@model ExpenseTracker.ViewModels.Category.UpdateCategoryViewModel;
+
+@{
+}
+
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="widget p-5" style="background-color:#212b36">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" name="CategoryId" value="@Model.Id" />
+                <div class="mb-3">
+                    <label class="e-btn" for="radioleft">@(Model.Type == ExpenseTracker.Domain.Enums.CategoryType.Income ? "Income" : "Expense")</label>
+                </div>
+                <div class="mb-3">
+                    <ejs-textbox id="title" placeholder="Title" ejs-for="Name" floatLabelType="Always"></ejs-textbox>
+                    <span asp-validation-for="Name" class="text-danger fs-6"></span>
+                </div>
+                <div class="mb-3">
+                    <ejs-textbox id="note" placeholder="Description" ejs-for="Description"
+                                 floatLabelType="Always" multiline="true"></ejs-textbox>
+                </div>
+                <div class="d-flex gap-3 justify-content-between">
+                    <ejs-button id="submit" type="submit" content="Submit" cssClass="e-success"></ejs-button>
+                    <a class="btn btn-sm no-a-decoration" href="/categories/delete/${Id}">
+                        <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
+                    </a>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+    <div class="col-md-5">
+        <div class="widget h-100 d-flex justify-content-center align-items-center">
+            <i class="fa-solid fa-shapes fa-2xl"></i>
+        </div>
+    </div>
+</div>
+
+
+@*@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}*@
