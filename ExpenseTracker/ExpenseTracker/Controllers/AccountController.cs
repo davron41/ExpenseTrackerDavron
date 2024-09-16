@@ -1,6 +1,6 @@
+using ExpenseTracker.Application.ViewModels.Account;
 using ExpenseTracker.Infrastructure.Email;
 using ExpenseTracker.Infrastructure.Email.Interfaces;
-using ExpenseTracker.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -73,15 +73,15 @@ public class AccountController : Controller
         var user = new IdentityUser { UserName = model.Email, Email = model.Email };
         var result = await _userManager.CreateAsync(user, model.Password);
 
-        var emailMessage = new EmailMessage(
-            ["jamshidchoriyev795@gmail.com", "begjanmaxamatxanov@gmail.com", user.Email],
-            "Registration Confirmation",
-            "Thank you for registering to Expense Tracker.");
-        _emailService.SendEmail(emailMessage);
-
         if (result.Succeeded)
         {
             await _signInManager.SignInAsync(user, isPersistent: false);
+
+            var emailMessage = new EmailMessage(
+                ["jamshidchoriyev795@gmail.com", "begjanmaxamatxanov@gmail.com", user.Email],
+                "Registration Confirmation",
+                "Thank you for registering to Expense Tracker.");
+            _emailService.SendEmail(emailMessage);
 
             return RedirectToLocal(returnUrl);
         }
