@@ -13,8 +13,6 @@ public static class DependencyInjection
         services.RegisterInfrastructure(configuration);
         services.RegisterApplication(configuration);
 
-
-
         AddControllers(services);
         AddProviders(configuration);
 
