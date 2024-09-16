@@ -1,7 +1,7 @@
-﻿using ExpenseTracker.Domain.Interfaces;
+﻿using ExpenseTracker.Application.ViewModels.Category;
+using ExpenseTracker.Domain.Interfaces;
 using ExpenseTracker.Mappings;
 using ExpenseTracker.Stores.Interfaces;
-using ExpenseTracker.ViewModels.Category;
 
 namespace ExpenseTracker.Stores;
 

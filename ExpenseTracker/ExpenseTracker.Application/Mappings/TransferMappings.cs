@@ -1,5 +1,5 @@
-﻿using ExpenseTracker.Domain.Entities;
-using ExpenseTracker.ViewModels.Transfer;
+﻿using ExpenseTracker.Application.ViewModels.Transfer;
+using ExpenseTracker.Domain.Entities;
 
 namespace ExpenseTracker.Mappings;
 

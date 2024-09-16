@@ -1,4 +1,4 @@
-﻿using ExpenseTracker.ViewModels.Category;
+﻿using ExpenseTracker.Application.ViewModels.Category;
 
 namespace ExpenseTracker.Stores.Interfaces;
 

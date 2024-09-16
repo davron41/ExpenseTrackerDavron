@@ -1,4 +1,5 @@
-﻿using ExpenseTracker.ViewModels.Transfer;
+﻿using ExpenseTracker.Application.ViewModels.Transfer;
+using Microsoft.AspNetCore.Http;
 
 namespace ExpenseTracker.Stores.Interfaces
 {
