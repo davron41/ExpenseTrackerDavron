@@ -1,10 +1,10 @@
-﻿using ExpenseTracker.Stores.Interfaces;
+﻿using ExpenseTracker.Infrastructure.Email;
+using ExpenseTracker.Infrastructure.Email.Interfaces;
+using ExpenseTracker.Infrastructure.Extensions;
 using ExpenseTracker.Stores;
+using ExpenseTracker.Stores.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using ExpenseTracker.Infrastructure.Email.Interfaces;
-using ExpenseTracker.Infrastructure.Email;
-using ExpenseTracker.Infrastructure.Extensions;
 using Syncfusion.Licensing;
 
 namespace ExpenseTracker.Extensions;

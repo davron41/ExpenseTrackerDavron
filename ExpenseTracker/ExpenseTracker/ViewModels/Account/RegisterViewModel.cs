@@ -9,7 +9,7 @@ public class RegisterViewModel
     public required string Email { get; set; }
 
     [DataType(DataType.Password)]
-    [Display(Name =  "Password")]
+    [Display(Name = "Password")]
     [Required(ErrorMessage = "Password is required")]
     [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
     public required string Password { get; set; }

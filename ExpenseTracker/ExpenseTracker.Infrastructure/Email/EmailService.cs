@@ -51,7 +51,7 @@ public class EmailService : IEmailService
             client.Authenticate(_username, _password);
             client.Send(mailMessage);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
         }

@@ -4,7 +4,6 @@ using ExpenseTracker.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace ExpenseTracker.Controllers;
 
@@ -75,8 +74,8 @@ public class AccountController : Controller
         var result = await _userManager.CreateAsync(user, model.Password);
 
         var emailMessage = new EmailMessage(
-            ["jamshidchoriyev795@gmail.com", "begjanmaxamatxanov@gmail.com", user.Email], 
-            "Registration Confirmation", 
+            ["jamshidchoriyev795@gmail.com", "begjanmaxamatxanov@gmail.com", user.Email],
+            "Registration Confirmation",
             "Thank you for registering to Expense Tracker.");
         _emailService.SendEmail(emailMessage);
 
