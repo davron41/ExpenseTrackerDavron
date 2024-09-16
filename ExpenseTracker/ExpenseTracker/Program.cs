@@ -1,50 +1,24 @@
 using ExpenseTracker.Extensions;
 using ExpenseTracker.Infrastructure;
-using Microsoft.AspNetCore.Diagnostics;
-using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureServices(builder.Configuration);
 
-var app = builder.Build();
+builder.Services.AddControllersWithViews();
 
-// Homework
-// Find and implement error pages (Not Found, Internal Error etc)
-// Revise middlewares and filters
+var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler(exceptionHandlerApp =>
-    {
-        exceptionHandlerApp.Run(async context =>
-        {
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-
-            // using static System.Net.Mime.MediaTypeNames;
-            context.Response.ContentType = Text.Plain;
-
-            await context.Response.WriteAsync("An exception was thrown.");
-
-            var exceptionHandlerPathFeature =
-                context.Features.Get<IExceptionHandlerPathFeature>();
-
-            if (exceptionHandlerPathFeature?.Error is FileNotFoundException)
-            {
-                await context.Response.WriteAsync(" The file was not found.");
-            }
-
-            if (exceptionHandlerPathFeature?.Path == "/")
-            {
-                await context.Response.WriteAsync(" Page: Home.");
-            }
-        });
-    });
+    app.UseExceptionHandler("/Home/Error");
+    app.UseStatusCodePagesWithReExecute("/Home/StatusCode", "?code={0}");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 else
 {
+    app.UseDeveloperExceptionPage();
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<ExpenseTrackerDbContext>();
     DatabaseInitializer.SeedDatabase(context);
