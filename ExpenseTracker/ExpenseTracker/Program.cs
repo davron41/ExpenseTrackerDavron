@@ -9,10 +9,6 @@ builder.Services.ConfigureServices(builder.Configuration);
 
 var app = builder.Build();
 
-// Homework
-// Find and implement error pages (Not Found, Internal Error etc)
-// Revise middlewares and filters
-
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler(exceptionHandlerApp =>
