@@ -1,12 +1,12 @@
 using ExpenseTracker.Domain.Enums;
 using ExpenseTracker.Infrastructure;
-using ExpenseTracker.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 namespace ExpenseTracker.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ExpenseTrackerDbContext _context;
@@ -15,7 +15,6 @@ public class HomeController : Controller
     {
         _context = context;
     }
-
     public IActionResult Index()
     {
         PopulateWidgets();
@@ -26,15 +25,24 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult Privacy()
+    [Route("Home/Error")]
+    public IActionResult Error()
     {
         return View();
     }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+    [Route("Home/StatusCode")]
+    public IActionResult StatusCodeHandler(int statusCode)
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        if (statusCode == 404)
+        {
+            return View("NotFound");
+        }
+        else if (statusCode == 500)
+        {
+            return View("ServerError");
+        }
+
+        return View();
     }
 
     private void PopulateWidgets()

@@ -1,5 +1,5 @@
-﻿using ExpenseTracker.Stores.Interfaces;
-using ExpenseTracker.ViewModels.Transfer;
+﻿using ExpenseTracker.Application.ViewModels.Transfer;
+using ExpenseTracker.Stores.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
