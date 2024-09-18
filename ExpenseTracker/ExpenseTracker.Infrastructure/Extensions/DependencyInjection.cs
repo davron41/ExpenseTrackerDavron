@@ -1,4 +1,5 @@
 ﻿using ExpenseTracker.Domain.Interfaces;
+using ExpenseTracker.Infrastructure.Configurations;
 using ExpenseTracker.Infrastructure.Email;
 using ExpenseTracker.Infrastructure.Email.Interfaces;
 using ExpenseTracker.Infrastructure.Repositories;
@@ -42,6 +43,12 @@ public static class DependencyInjection
             })
             .AddEntityFrameworkStores<ExpenseTrackerDbContext>()
             .AddDefaultTokenProviders();
+
+        services.AddOptions<EmailOptions>()
+            .Bind(configuration.GetSection(EmailOptions.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
 
         return services;
     }
