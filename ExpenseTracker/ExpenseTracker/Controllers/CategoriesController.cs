@@ -1,4 +1,5 @@
 ﻿using ExpenseTracker.Application.ViewModels.Category;
+using ExpenseTracker.Filters;
 using ExpenseTracker.Mappings;
 using ExpenseTracker.Stores.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,6 @@ namespace ExpenseTracker.Controllers;
 public class CategoriesController : Controller
 {
     private readonly ICategoryStore _store;
-
 
     public CategoriesController(ICategoryStore store)
     {
@@ -28,7 +28,7 @@ public class CategoriesController : Controller
     {
         if (id == null)
         {
-            return NotFound();
+            return View("NotFound");
         }
 
         var result = _store.GetById(id.Value);
@@ -37,7 +37,7 @@ public class CategoriesController : Controller
     }
 
     public IActionResult Create()
-    {
+    {;
         return View();
     }
 

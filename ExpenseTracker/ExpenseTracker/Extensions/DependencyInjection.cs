@@ -1,4 +1,5 @@
 ﻿using ExpenseTracker.Application.Extensions;
+using ExpenseTracker.Filters;
 using ExpenseTracker.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -41,6 +42,7 @@ public static class DependencyInjection
                     .RequireAuthenticatedUser()
                     .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
+                options.Filters.Add(new ExceptionHandlerFilter());
             })
             .AddJsonOptions(x =>
             {
