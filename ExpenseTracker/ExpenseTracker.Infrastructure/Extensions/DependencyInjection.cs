@@ -49,7 +49,6 @@ public static class DependencyInjection
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-
         return services;
     }
 }
