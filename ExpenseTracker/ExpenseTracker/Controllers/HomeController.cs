@@ -26,30 +26,12 @@ public class HomeController : Controller
     }
 
     [Route("Home/Error")]
-    public IActionResult Error(int? statusCode = 500)
-    {
-        if (statusCode == 404)
+    public IActionResult Error(int? statusCode = 500) =>
+        statusCode switch
         {
-            return View("NotFound");
+            404 => View("NotFound");
+            _ => View("Error");
         }
-
-        return View("Error");
-    }
-
-    [Route("Home/Statuscode")]
-    public IActionResult StatusCodeHandler(int statusCode)
-    {
-        if (statusCode == 404)
-        {
-            return View("NotFound");
-        }
-        else if (statusCode == 500)
-        {
-            return View("ServerError");
-        }
-
-        return View();
-    }
 
     [Route("Home/NotFound")]
     public IActionResult NotFoundError() => View("NotFound");
