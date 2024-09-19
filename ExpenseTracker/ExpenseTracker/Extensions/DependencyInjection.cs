@@ -43,6 +43,7 @@ public static class DependencyInjection
                     .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
                 options.Filters.Add(new ExceptionHandlerFilter());
+                options.Filters.Add(new HeaderResultFilter());
             })
             .AddJsonOptions(x =>
             {
