@@ -26,24 +26,18 @@ public class HomeController : Controller
     }
 
     [Route("Home/Error")]
-    public IActionResult Error()
-    {
-        return View();
-    }
-    [Route("Home/StatusCode")]
-    public IActionResult StatusCodeHandler(int statusCode)
-    {
-        if (statusCode == 404)
+    public IActionResult Error(int? statusCode = 500) =>
+        statusCode switch
         {
-            return View("NotFound");
-        }
-        else if (statusCode == 500)
-        {
-            return View("ServerError");
+            404 => View("NotFound");
+            _ => View("Error");
         }
 
-        return View();
-    }
+    [Route("Home/NotFound")]
+    public IActionResult NotFoundError() => View("NotFound");
+
+    [Route("Home/InternalError")]
+    public IActionResult InternalError() => View("Error");
 
     private void PopulateWidgets()
     {
