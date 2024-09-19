@@ -37,7 +37,7 @@ public class CategoriesController : Controller
     }
 
     public IActionResult Create()
-    {;
+    {
         return View();
     }
 
