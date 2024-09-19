@@ -28,7 +28,7 @@ public class CategoriesController : Controller
     {
         if (id == null)
         {
-            return View("NotFound");
+            return RedirectToAction("NotFoundError", "Home");
         }
 
         var result = _store.GetById(id.Value);
