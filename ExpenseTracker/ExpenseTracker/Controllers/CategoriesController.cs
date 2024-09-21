@@ -1,4 +1,5 @@
-﻿using ExpenseTracker.Application.ViewModels.Category;
+﻿using ExpenseTracker.Application.Requests.Category;
+using ExpenseTracker.Application.ViewModels.Category;
 using ExpenseTracker.Filters;
 using ExpenseTracker.Mappings;
 using ExpenseTracker.Stores.Interfaces;
@@ -16,15 +17,15 @@ public class CategoriesController : Controller
         _store = store;
     }
 
-    public IActionResult Index(string? search)
+    public IActionResult Index([FromQuery] GetCategoriesRequest request)
     {
-        var result = _store.GetAll(search);
-        ViewBag.Search = search;
+        var result = _store.GetAll(request);
+        ViewBag.Search = request.Search;
 
         return View(result);
     }
 
-    public IActionResult Details(int? id)
+    public IActionResult Details([FromRoute] CategoryRequest request)
     {
         if (id == null)
         {
@@ -43,19 +44,19 @@ public class CategoriesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(CreateCategoryViewModel category)
+    public IActionResult Create([FromBody] CreateCategoryRequest request)
     {
         if (!ModelState.IsValid)
         {
-            return View(category);
+            return View(request);
         }
 
-        var createdCategory = _store.Create(category);
+        var createdCategory = _store.Create(request);
 
         return RedirectToAction(nameof(Index));
     }
 
-    public IActionResult Edit(int? id)
+    public IActionResult Edit([FromRoute] CategoryRequest request)
     {
         if (id == null)
         {
@@ -76,7 +77,7 @@ public class CategoriesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, UpdateCategoryViewModel category)
+    public IActionResult Edit(int id, [FromBody] UpdateCategoryRequest request)
     {
         if (id != category.Id)
         {
@@ -106,7 +107,7 @@ public class CategoriesController : Controller
         return View(category);
     }
 
-    public IActionResult Delete(int? id)
+    public IActionResult Delete([FromRoute] CategoryRequest request)
     {
         if (id == null)
         {
@@ -125,7 +126,7 @@ public class CategoriesController : Controller
 
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public IActionResult DeleteConfirmed(int id)
+    public IActionResult DeleteConfirmed([FromRoute] CategoryRequest request)
     {
         var category = _store.GetById(id);
 
@@ -146,7 +147,7 @@ public class CategoriesController : Controller
     [Route("getCategories")]
     public ActionResult<CategoryViewModel> GetCategories(string? search)
     {
-        var result = _store.GetAll(search);
+        var result = _store.GetAll(null);
 
         return Ok(result);
     }

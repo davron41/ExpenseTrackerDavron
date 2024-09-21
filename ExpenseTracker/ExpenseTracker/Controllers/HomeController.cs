@@ -29,9 +29,9 @@ public class HomeController : Controller
     public IActionResult Error(int? statusCode = 500) =>
         statusCode switch
         {
-            404 => View("NotFound");
-            _ => View("Error");
-        }
+            404 => View("NotFound"),
+            _ => View("Error")
+        };
 
     [Route("Home/NotFound")]
     public IActionResult NotFoundError() => View("NotFound");

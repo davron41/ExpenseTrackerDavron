@@ -57,7 +57,7 @@ public class TransfersController : Controller
 
     public IActionResult Create()
     {
-        var categories = _categoryStore.GetAll("");
+        var categories = _categoryStore.GetAll(null);
         var defaultCategory = categories.FirstOrDefault();
 
         ViewBag.Categories = categories;
@@ -107,7 +107,7 @@ public class TransfersController : Controller
             return NotFound();
         }
 
-        var categories = _categoryStore.GetAll("");
+        var categories = _categoryStore.GetAll(null);
         ViewBag.Categories = categories;
 
         return View(viewModel);
