@@ -1,10 +1,22 @@
-﻿using ExpenseTracker.Application.ViewModels.Category;
+﻿using ExpenseTracker.Application.Requests.Category;
+using ExpenseTracker.Application.ViewModels.Category;
 using ExpenseTracker.Domain.Entities;
 
 namespace ExpenseTracker.Mappings;
 
 public static class CategoryMappings
 {
+    public static Category ToEntity(this CreateCategoryRequest request)
+    {
+        return new Category
+        {
+            Name = request.Name,
+            Description = request.Description,
+            Type = request.Type,
+            UserId = request.UserId,
+        };
+    }
+
     public static CategoryViewModel ToViewModel(this Category category)
     {
         return new CategoryViewModel
