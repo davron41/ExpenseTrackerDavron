@@ -1,4 +1,5 @@
 using ExpenseTracker.Extensions;
+using ExpenseTracker.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,9 @@ if (!app.Environment.IsDevelopment())
 else
 {
     app.UseDeveloperExceptionPage();
-    app.UseDatabaseInitializer();
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<ExpenseTrackerDbContext>();
+    //DatabaseInitializer.SeedDatabase(context);
 }
 
 app.UseHttpsRedirection();
