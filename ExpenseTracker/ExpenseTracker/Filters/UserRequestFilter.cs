@@ -9,7 +9,7 @@ public class UserRequestFilter : IAsyncActionFilter
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         var args = context.ActionArguments.Values.OfType<UserRequest>().FirstOrDefault();
-        
+
         if (args != null)
         {
             var user = context.HttpContext.User;
