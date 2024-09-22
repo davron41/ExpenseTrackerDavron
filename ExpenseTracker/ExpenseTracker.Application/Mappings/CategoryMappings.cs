@@ -16,6 +16,17 @@ public static class CategoryMappings
             UserId = request.UserId,
         };
     }
+    public static Category ToEntity(this UpdateCategoryRequest request)
+    {
+        return new Category
+        {
+            Name = request.Name,
+            Description = request.Description,
+            Type = request.Type,
+            UserId = request.UserId,
+
+        };
+    }
 
     public static CategoryViewModel ToViewModel(this Category category)
     {
