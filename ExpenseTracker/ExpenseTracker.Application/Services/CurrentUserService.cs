@@ -17,9 +17,9 @@ internal sealed class CurrentUserService : ICurrentUserService
     {
         var user = (_contextAccessor.HttpContext?.User)
             ?? throw new InvalidOperationException("Current context does not have user.");
-        
+
         var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        
+
         if (!Guid.TryParse(userId, out Guid result))
         {
             throw new InvalidOperationException($"Could not parse user id: {userId}.");
