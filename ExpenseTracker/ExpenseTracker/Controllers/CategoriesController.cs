@@ -1,6 +1,5 @@
 ﻿using ExpenseTracker.Application.Requests.Category;
 using ExpenseTracker.Application.ViewModels.Category;
-using ExpenseTracker.Filters;
 using ExpenseTracker.Mappings;
 using ExpenseTracker.Stores.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -27,12 +26,12 @@ public class CategoriesController : Controller
 
     public IActionResult Details([FromRoute] CategoryRequest request)
     {
-        if (id == null)
+        if (request?.CategoryId == null)
         {
             return RedirectToAction("NotFoundError", "Home");
         }
 
-        var result = _store.GetById(id.Value);
+        var result = _store.GetById(request);
 
         return View(result);
     }
@@ -58,12 +57,12 @@ public class CategoriesController : Controller
 
     public IActionResult Edit([FromRoute] CategoryRequest request)
     {
-        if (id == null)
+        if (request?.CategoryId == null)
         {
             return NotFound();
         }
 
-        var category = _store.GetById(id.Value);
+        var category = _store.GetById(request);
 
         if (category is null)
         {
@@ -79,7 +78,7 @@ public class CategoriesController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Edit(int id, [FromBody] UpdateCategoryRequest request)
     {
-        if (id != category.Id)
+        if (id != request.CategoryId)
         {
             return NotFound();
         }
@@ -88,11 +87,11 @@ public class CategoriesController : Controller
         {
             try
             {
-                _store.Update(category);
+                _store.Update(request);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CategoryExists(category.Id))
+                if (!CategoryExists(request))
                 {
                     return NotFound();
                 }
@@ -104,17 +103,17 @@ public class CategoriesController : Controller
 
             return RedirectToAction(nameof(Index));
         }
-        return View(category);
+        return View(request);
     }
 
     public IActionResult Delete([FromRoute] CategoryRequest request)
     {
-        if (id == null)
+        if (request?.CategoryId == null)
         {
             return NotFound();
         }
 
-        var category = _store.GetById(id.Value);
+        var category = _store.GetById(request);
 
         if (category is null)
         {
@@ -128,14 +127,14 @@ public class CategoriesController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeleteConfirmed([FromRoute] CategoryRequest request)
     {
-        var category = _store.GetById(id);
+        var category = _store.GetById(request);
 
         if (category is null)
         {
             return NotFound();
         }
 
-        _store.Delete(id);
+        _store.Delete(request);
         return RedirectToAction(nameof(Index));
     }
 
@@ -145,15 +144,17 @@ public class CategoriesController : Controller
     /// <param name="search"></param>
     /// <returns>List of filtered categories</returns>
     [Route("getCategories")]
-    public ActionResult<CategoryViewModel> GetCategories(string? search)
+    public ActionResult<CategoryViewModel> GetCategories(GetCategoriesRequest request)
     {
-        var result = _store.GetAll(null);
+        var result = _store.GetAll(request);
 
         return Ok(result);
     }
 
-    private bool CategoryExists(int id)
+    private bool CategoryExists(UpdateCategoryRequest request)
     {
-        return _store.GetById(id) is not null;
+        var categoryRequest = request.ToCategoryRequest();
+
+        return _store.GetById(categoryRequest) is not null;
     }
 }
