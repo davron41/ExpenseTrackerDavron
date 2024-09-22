@@ -22,7 +22,7 @@ public static class DatabaseInitializer
             CreateCategories(context);
             CreateTransfers(context);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine($"Unable to seed database. {ex.Message}");
         }
@@ -32,7 +32,7 @@ public static class DatabaseInitializer
     {
         if (context.Users.Any()) return;
 
-        for(int i =0; i < 20; i++)
+        for (int i = 0; i < 20; i++)
         {
             var user = new IdentityUser<Guid>
             {
