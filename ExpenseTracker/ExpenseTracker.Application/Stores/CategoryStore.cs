@@ -4,17 +4,15 @@ using ExpenseTracker.Application.ViewModels.Category;
 using ExpenseTracker.Domain.Interfaces;
 using ExpenseTracker.Mappings;
 using ExpenseTracker.Stores.Interfaces;
-using Microsoft.AspNetCore.Http;
 
 namespace ExpenseTracker.Stores;
 
 public class CategoryStore : ICategoryStore
 {
     private readonly ICommonRepository _repository;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ICurrentUserService _currentUserService;
 
-    public CategoryStore(ICommonRepository repository,  ICurrentUserService currentUserService)
+    public CategoryStore(ICommonRepository repository, ICurrentUserService currentUserService)
     {
         _repository = repository;
         _currentUserService = currentUserService;
@@ -23,7 +21,7 @@ public class CategoryStore : ICategoryStore
     public List<CategoryViewModel> GetAll(GetCategoriesRequest request)
     {
         var userId = _currentUserService.GetCurrentUserId();
-        var entities = _repository.Categories.GetAll(request.Search, userId);
+        var entities = _repository.Categories.GetAll(request.Search, request.UserId);
         var viewModels = entities
             .Select(x => x.ToViewModel())
             .ToList();
@@ -31,9 +29,9 @@ public class CategoryStore : ICategoryStore
         return viewModels;
     }
 
-    public CategoryViewModel GetById(int id)
+    public CategoryViewModel GetById(CategoryRequest request)
     {
-        var entity = _repository.Categories.GetById(id);
+        var entity = _repository.Categories.GetById(request.CategoryId, request.UserId);
 
         return entity.ToViewModel();
     }
@@ -50,19 +48,19 @@ public class CategoryStore : ICategoryStore
         return createdEntity.ToViewModel();
     }
 
-    public void Update(UpdateCategoryViewModel category)
+    public void Update(UpdateCategoryRequest request)
     {
-        ArgumentNullException.ThrowIfNull(category);
+        ArgumentNullException.ThrowIfNull(request);
 
-        var entity = category.ToEntity();
+        var entity = request.ToEntity();
 
         _repository.Categories.Update(entity);
         _repository.SaveChanges();
     }
 
-    public void Delete(int id)
+    public void Delete(CategoryRequest request)
     {
-        _repository.Categories.Delete(id);
+        _repository.Categories.Delete(request.CategoryId, request.UserId);
         _repository.SaveChanges();
     }
 }
