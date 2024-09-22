@@ -35,7 +35,7 @@ public class CategoriesController : Controller
 
         return View(result);
     }
-
+    [HttpGet]
     public IActionResult Create()
     {
         return View();
@@ -43,7 +43,7 @@ public class CategoriesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create([FromBody] CreateCategoryRequest request)
+    public IActionResult Create(CreateCategoryRequest request)
     {
         if (!ModelState.IsValid)
         {
@@ -106,7 +106,7 @@ public class CategoriesController : Controller
         return View(request);
     }
 
-    public IActionResult Delete([FromRoute] CategoryRequest request)
+    public IActionResult Delete(CategoryRequest request)
     {
         if (request?.CategoryId == null)
         {
@@ -125,7 +125,7 @@ public class CategoriesController : Controller
 
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public IActionResult DeleteConfirmed([FromRoute] CategoryRequest request)
+    public IActionResult DeleteConfirmed( CategoryRequest request)
     {
         var category = _store.GetById(request);
 
