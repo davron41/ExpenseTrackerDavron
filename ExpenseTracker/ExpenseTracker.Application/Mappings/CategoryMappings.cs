@@ -30,35 +30,23 @@ public static class CategoryMappings
         };
     }
 
-    public static UpdateCategoryViewModel ToUpdateViewModel(this CategoryViewModel category)
+    public static UpdateCategoryRequest ToUpdateViewModel(this CategoryViewModel category)
     {
-        return new UpdateCategoryViewModel
+        return new UpdateCategoryRequest
         {
-            Id = category.Id,
+            CategoryId = category.Id,
             Name = category.Name,
             Type = category.Type,
             Description = category.Description
         };
     }
 
-    public static Category ToEntity(this CreateCategoryViewModel category)
+    public static CategoryRequest ToCategoryRequest(this UpdateCategoryRequest updateCategory)
     {
-        return new Category
+        return new CategoryRequest
         {
-            Name = category.Name,
-            Description = category.Description,
-            Type = category.Type,
-        };
-    }
-
-    public static Category ToEntity(this UpdateCategoryViewModel category)
-    {
-        return new Category
-        {
-            Id = category.Id,
-            Name = category.Name,
-            Description = category.Description,
-            Type = category.Type,
+            CategoryId = updateCategory.CategoryId,
+            UserId = updateCategory.UserId,
         };
     }
 }
