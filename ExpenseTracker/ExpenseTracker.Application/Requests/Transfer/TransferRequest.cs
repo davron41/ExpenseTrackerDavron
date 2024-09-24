@@ -2,7 +2,4 @@
 
 namespace ExpenseTracker.Application.Requests.Transfer;
 
-public class TransferRequest : UserRequest
-{
-    public int TransferId { get; set; }
-}
+public record TransferRequest(Guid UserId, int TransferId) : UserRequest(UserId: UserId);
