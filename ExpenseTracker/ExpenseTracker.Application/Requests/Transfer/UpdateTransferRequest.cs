@@ -1,9 +1,9 @@
 ﻿namespace ExpenseTracker.Application.Requests.Transfer;
 
-public record UpdateTransferRequest(
+public sealed record UpdateTransferRequest(
     Guid UserId,
+    int Id,
     int CategoryId,
-    int TransferId,
     string? Notes,
     decimal Amount,
     DateTime Date)

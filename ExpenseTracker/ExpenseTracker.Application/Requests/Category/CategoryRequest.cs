@@ -2,7 +2,7 @@
 
 namespace ExpenseTracker.Application.Requests.Category;
 
-public record CategoryRequest(
+public sealed record CategoryRequest(
     Guid UserId,
-    int CategoryId)
+    int Id)
     : UserRequest(UserId: UserId);

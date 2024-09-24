@@ -2,9 +2,9 @@
 
 namespace ExpenseTracker.Application.Requests.Category;
 
-public record UpdateCategoryRequest(
+public sealed record UpdateCategoryRequest(
     Guid UserId,
-    int CategoryId,
+    int Id,
     string Name,
     string? Description,
     CategoryType Type)

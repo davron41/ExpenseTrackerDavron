@@ -2,7 +2,7 @@
 
 namespace ExpenseTracker.Application.Requests.Transfer;
 
-public record GetTransfersRequest(
+public sealed record GetTransfersRequest(
     Guid UserId,
     int CategoryId,
     string? Search,

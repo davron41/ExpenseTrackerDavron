@@ -2,4 +2,5 @@
 
 namespace ExpenseTracker.Application.Requests.Transfer;
 
-public record TransferRequest(Guid UserId, int TransferId) : UserRequest(UserId: UserId);
+public sealed record TransferRequest(Guid UserId, int Id) 
+    : UserRequest(UserId: UserId);
