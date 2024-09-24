@@ -1,6 +1,4 @@
-﻿using ExpenseTracker.Application.Requests.Common;
-
-namespace ExpenseTracker.Application.Requests.Wallet;
+﻿namespace ExpenseTracker.Application.Requests.Wallet;
 
 public sealed record UpdateWalletRequest(
     Guid UserId,
@@ -8,7 +6,7 @@ public sealed record UpdateWalletRequest(
     string Name,
     string Description,
     decimal Balance,
-    bool IsMain) 
+    bool IsMain)
     : CreateWalletRequest(
         UserId: UserId,
         Name: Name,
