@@ -28,8 +28,8 @@ public class TransferStore : ITransferStore
 
     public TransferViewModel GetById(TransferRequest request)
     {
-        var transfer = _repository.Transfers.GetById(request.TransferId);
-        transfer.Images = _repository.ImageFiles.GetByTransferId(request.TransferId);
+        var transfer = _repository.Transfers.GetById(request.Id);
+        transfer.Images = _repository.ImageFiles.GetByTransferId(request.Id);
         var viewModel = transfer.ToViewModel();
 
         return viewModel;
@@ -37,7 +37,7 @@ public class TransferStore : ITransferStore
 
     public TransferViewModel GetForUpdate(UpdateTransferRequest request)
     {
-        var transfer = _repository.Transfers.GetById(request.TransferId);
+        var transfer = _repository.Transfers.GetById(request.Id);
         var viewModel = transfer.ToViewModel();
 
         return viewModel;
@@ -86,7 +86,7 @@ public class TransferStore : ITransferStore
     }
     public void Delete(TransferRequest request)
     {
-        _repository.Transfers.Delete(request.TransferId);
+        _repository.Transfers.Delete(request.Id);
         _repository.SaveChanges();
     }
 }
