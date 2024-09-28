@@ -49,7 +49,7 @@ public static class TransferMappings
 
     public static TransferRequest ToTransferRequest(this UpdateTransferRequest request)
     {
-        return new TransferRequest(request.UserId, request.TransferId);
+        return new TransferRequest(request.UserId, request.Id);
     }
 
     public static GetCategoriesRequest ToGetCategoriesRequest(this GetTransfersRequest request)
