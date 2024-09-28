@@ -46,7 +46,7 @@ public class TransfersController : Controller
 
     public IActionResult Details(TransferRequest request)
     {
-        if (request?.TransferId == null)
+        if (request?.Id == null)
         {
             return NotFound();
         }
@@ -73,7 +73,7 @@ public class TransfersController : Controller
         ViewBag.Categories = categories;
         ViewBag.DefaultCategory = new { defaultCategory?.Id, defaultCategory?.Name };
 
-        var model = new CreateTransferRequest(default, null, default, default, default)
+        var model = new CreateTransferRequest(default, 0 , default, default, default)
         {
             Date = DateTime.Now
         };
@@ -105,7 +105,7 @@ public class TransfersController : Controller
 
     public IActionResult Edit([FromRoute] UpdateTransferRequest request)
     {
-        if (request?.TransferId == null)
+        if (request?.Id == null)
         {
             return NotFound();
         }
@@ -127,7 +127,7 @@ public class TransfersController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Edit(int? id, [FromBody] UpdateTransferRequest request)
     {
-        if (id != request.TransferId)
+        if (id != request.Id)
         {
             return NotFound();
         }
@@ -158,7 +158,7 @@ public class TransfersController : Controller
 
     public IActionResult Delete([FromRoute] TransferRequest request)
     {
-        if (request?.TransferId == null)
+        if (request?.Id == null)
         {
             return NotFound();
         }

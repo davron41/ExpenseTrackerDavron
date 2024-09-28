@@ -1,3 +1,4 @@
+using ExpenseTracker.Application.Requests.Auth;
 using ExpenseTracker.Infrastructure.Email;
 using ExpenseTracker.Infrastructure.Email.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -32,7 +33,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+    public async Task<IActionResult> Login(LoginUserRequest model, string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
 
@@ -60,7 +61,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
+    public async Task<IActionResult> Register(RegisterUserRequest model, string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
 

@@ -25,7 +25,7 @@ public class CategoriesController : Controller
 
     public IActionResult Details([FromRoute] CategoryRequest request)
     {
-        if (request?.CategoryId == null)
+        if (request?.Id == null)
         {
             return RedirectToAction("NotFoundError", "Home");
         }
@@ -57,7 +57,7 @@ public class CategoriesController : Controller
 
     public IActionResult Edit([FromRoute] CategoryRequest request)
     {
-        if (request?.CategoryId == null)
+        if (request?.Id == null)
         {
             return NotFound();
         }
@@ -76,7 +76,7 @@ public class CategoriesController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Edit(int id, [FromBody] UpdateCategoryRequest request)
     {
-        if (id != request.CategoryId)
+        if (id != request.Id)
         {
             return NotFound();
         }
@@ -106,7 +106,7 @@ public class CategoriesController : Controller
 
     public IActionResult Delete(int id, CategoryRequest request)
     {
-        if (request?.CategoryId == null)
+        if (request?.Id == null)
         {
             return NotFound();
         }
