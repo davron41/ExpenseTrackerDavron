@@ -1,5 +1,5 @@
 ﻿using ExpenseTracker.Domain.Common;
-using ExpenseTracker.Infrastructure.Persistence.Extensions;
+using ExpenseTracker.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

@@ -1,7 +1,8 @@
-﻿using ExpenseTracker.Domain.Interfaces;
+﻿using ExpenseTracker.Application.Services.Interfaces;
+using ExpenseTracker.Domain.Interfaces;
 using ExpenseTracker.Infrastructure.Configurations;
 using ExpenseTracker.Infrastructure.Email;
-using ExpenseTracker.Infrastructure.Email.Interfaces;
+using ExpenseTracker.Infrastructure.Persistence;
 using ExpenseTracker.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +48,8 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<ExpenseTrackerDbContext>()
             .AddDefaultTokenProviders();
 
-        services.AddOptions<EmailOptions>()
+        services
+            .AddOptions<EmailOptions>()
             .Bind(configuration.GetSection(EmailOptions.SectionName))
             .ValidateDataAnnotations()
             .ValidateOnStart();

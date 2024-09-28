@@ -1,6 +1,7 @@
 ﻿using ExpenseTracker.Domain.Common;
 using ExpenseTracker.Domain.Exceptions;
 using ExpenseTracker.Domain.Interfaces;
+using ExpenseTracker.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Infrastructure.Repositories;
@@ -36,11 +37,6 @@ internal abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where
     {
         ArgumentNullException.ThrowIfNull(entity);
 
-        if (!_context.Set<TEntity>().Any(x => x.Id == entity.Id))
-        {
-            throw new EntityNotFoundException($"{typeof(TEntity)} with id: {entity.Id} is not found.");
-        }
-
         _context.Set<TEntity>().Update(entity);
     }
 
@@ -50,6 +46,9 @@ internal abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where
 
         _context.Set<TEntity>().Remove(entity);
     }
+
+    public bool Exists(int id)
+        => _context.Set<TEntity>().Any(x => x.Id == id);
 
     private TEntity GetOrThrow(int id)
     {

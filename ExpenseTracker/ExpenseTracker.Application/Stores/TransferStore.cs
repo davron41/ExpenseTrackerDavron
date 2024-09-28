@@ -1,10 +1,12 @@
 ﻿using ExpenseTracker.Application.Requests.Transfer;
 using ExpenseTracker.Application.ViewModels.Transfer;
 using ExpenseTracker.Domain.Entities;
+using ExpenseTracker.Domain.Exceptions;
 using ExpenseTracker.Domain.Interfaces;
 using ExpenseTracker.Mappings;
 using ExpenseTracker.Stores.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Stores;
 
@@ -30,14 +32,6 @@ public class TransferStore : ITransferStore
     {
         var transfer = _repository.Transfers.GetById(request.Id);
         transfer.Images = _repository.ImageFiles.GetByTransferId(request.Id);
-        var viewModel = transfer.ToViewModel();
-
-        return viewModel;
-    }
-
-    public TransferViewModel GetForUpdate(UpdateTransferRequest request)
-    {
-        var transfer = _repository.Transfers.GetById(request.Id);
         var viewModel = transfer.ToViewModel();
 
         return viewModel;
@@ -81,9 +75,20 @@ public class TransferStore : ITransferStore
 
         var entity = request.ToEntity();
 
-        _repository.Transfers.Update(entity);
-        _repository.SaveChanges();
+        try
+        {
+            _repository.Transfers.Update(entity);
+            _repository.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!_repository.Transfers.Exists(request.Id))
+            {
+                throw new EntityNotFoundException($"Transfer with id: {request.Id} is not found.");
+            }
+        }
     }
+
     public void Delete(TransferRequest request)
     {
         _repository.Transfers.Delete(request.Id);

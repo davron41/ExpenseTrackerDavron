@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using ExpenseTracker.Application.Requests.Common
+@inject ExpenseTracker.Application.Stores.Interfaces.IWalletStore walletStore;
+@inject ExpenseTracker.Application.Services.Interfaces.ICurrentUserService currentUserService;
+
+@{
+    var userRequest = new UserRequest(currentUserService.GetCurrentUserId());
+}
+
+<!DOCTYPE html>
 <html lang="en" >
 <head>
     <meta charset="utf-8" />
@@ -27,6 +35,12 @@
                     </a>
                 </div>
                 <div>
+                    <select name="wallets" id="wallets">
+                        @foreach (var wallet in walletStore.GetAll(userRequest))
+                        {
+                            <option value="@wallet.Id">@wallet.Name</option>
+                        }
+                    </select>
                     <i class="fa-solid fa-bell"></i>
                     <i class="fa-solid fa-message"></i>
                     <img class="profile-pic" src="~/profile.jpg" />

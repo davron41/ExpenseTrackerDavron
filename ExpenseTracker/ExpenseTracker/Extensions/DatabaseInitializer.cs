@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Enums;
-using ExpenseTracker.Infrastructure;
+using ExpenseTracker.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 
 namespace ExpenseTracker.Extensions;

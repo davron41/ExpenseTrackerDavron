@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace ExpenseTracker.Infrastructure.Persistence.Extensions;
+namespace ExpenseTracker.Infrastructure.Extensions;
 
 internal static class EntityEntryExtensions
 {
