@@ -14,6 +14,8 @@ public static class WalletMappings
             Description = wallet.Description,
             Balance = wallet.Balance,
             IsMain = wallet.IsMain,
+            UserId = wallet.OwnerId,
+            UserName = wallet.Owner.UserName
         };
     }
 }
