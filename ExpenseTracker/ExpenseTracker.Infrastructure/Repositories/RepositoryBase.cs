@@ -1,6 +1,7 @@
 ﻿using ExpenseTracker.Domain.Common;
 using ExpenseTracker.Domain.Exceptions;
 using ExpenseTracker.Domain.Interfaces;
+using ExpenseTracker.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Infrastructure.Repositories;

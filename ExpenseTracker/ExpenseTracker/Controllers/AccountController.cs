@@ -1,9 +1,9 @@
 using ExpenseTracker.Application.Requests.Auth;
-using ExpenseTracker.Infrastructure.Email;
-using ExpenseTracker.Infrastructure.Email.Interfaces;
+using ExpenseTracker.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 
 namespace ExpenseTracker.Controllers;
 
@@ -76,12 +76,16 @@ public class AccountController : Controller
         if (result.Succeeded)
         {
             await _signInManager.SignInAsync(user, isPersistent: false);
+            var to = new List<MailboxAddress>
+            {
+                new MailboxAddress("", "jamshidchoriyev795@gmail.com"),
+                new MailboxAddress("", user.Email)
+            };
 
-            var emailMessage = new EmailMessage(
-                ["jamshidchoriyev795@gmail.com", "begjanmaxamatxanov@gmail.com", user.Email],
-                "Registration Confirmation",
+            _emailService.SendEmail(
+                to, 
+                "Registration Confirmation", 
                 "Thank you for registering to Expense Tracker.");
-            _emailService.SendEmail(emailMessage);
 
             return RedirectToLocal(returnUrl);
         }

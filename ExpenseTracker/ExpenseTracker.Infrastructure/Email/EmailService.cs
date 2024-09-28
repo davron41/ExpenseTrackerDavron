@@ -1,5 +1,5 @@
-﻿using ExpenseTracker.Infrastructure.Configurations;
-using ExpenseTracker.Infrastructure.Email.Interfaces;
+﻿using ExpenseTracker.Application.Services.Interfaces;
+using ExpenseTracker.Infrastructure.Configurations;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -15,20 +15,21 @@ public class EmailService : IEmailService
         _options = options.CurrentValue;
     }
 
-    public void SendEmail(EmailMessage message)
+    public void SendEmail(List<MailboxAddress> to, string subject, string content)
     {
-        var emailMessage = CreateEmailMessage(message);
+
+        var emailMessage = CreateEmailMessage(to, subject, content);
 
         Send(emailMessage);
     }
 
-    private MimeMessage CreateEmailMessage(EmailMessage message)
+    private MimeMessage CreateEmailMessage(List<MailboxAddress> to, string subject, string content)
     {
         var emailMessage = new MimeMessage();
         emailMessage.From.Add(new MailboxAddress("Expense Tracker", _options.From));
-        emailMessage.To.AddRange(message.To);
-        emailMessage.Subject = message.Subject;
-        emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text) { Text = message.Content };
+        emailMessage.To.AddRange(to);
+        emailMessage.Subject = subject;
+        emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text) { Text = content };
 
         return emailMessage;
     }
