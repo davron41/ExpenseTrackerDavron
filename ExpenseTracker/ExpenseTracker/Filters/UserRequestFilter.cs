@@ -4,30 +4,32 @@ using System.Security.Claims;
 
 namespace ExpenseTracker.Filters;
 
-public class UserRequestFilter : IAsyncActionFilter
+public class UserRequestFilter : IActionFilter
 {
-    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+    public void OnActionExecuting(ActionExecutingContext context)
     {
-        var args = context.ActionArguments.Values.OfType<UserRequest>().FirstOrDefault();
-
-        if (args != null)
+        foreach (var arg in context.ActionArguments)
         {
-            var user = context.HttpContext.User;
-            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (Guid.TryParse(userId, out var result))
+            if (arg.Value is UserRequest userRequest)
             {
-                context.ActionArguments.Values.Remove(args);
+                var user = context.HttpContext.User;
+                var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                args = args with
+                if (Guid.TryParse(userId, out var result))
                 {
-                    UserId = result
-                };
+                    var modifiedRequest = userRequest with
+                    {
+                        UserId = result
+                    };
 
-                context.ActionArguments.Values.Add(args);
+                    context.ActionArguments[arg.Key] = modifiedRequest;
+                }
             }
         }
+    }
 
-        await next();
+    public void OnActionExecuted(ActionExecutedContext context)
+    {
+        // No logic needed for after execution
     }
 }
