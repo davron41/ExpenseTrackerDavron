@@ -80,10 +80,8 @@ namespace ExpenseTracker.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -113,9 +111,84 @@ namespace ExpenseTracker.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Note")
+                    b.Property<string>("Notes")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("WalletId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("WalletId");
+
+                    b.ToTable("Transfer", (string)null);
+                });
+
+            modelBuilder.Entity("ExpenseTracker.Domain.Entities.Wallet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Balance")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsMain")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Wallet", (string)null);
+                });
+
+            modelBuilder.Entity("ExpenseTracker.Domain.Entities.WalletShare", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccessType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAccepted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -123,11 +196,16 @@ namespace ExpenseTracker.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("WalletId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Transfer", (string)null);
+                    b.HasIndex("WalletId");
+
+                    b.ToTable("WalletShare", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -357,7 +435,45 @@ namespace ExpenseTracker.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ExpenseTracker.Domain.Entities.Wallet", "Wallet")
+                        .WithMany("Transfers")
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("Wallet");
+                });
+
+            modelBuilder.Entity("ExpenseTracker.Domain.Entities.Wallet", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser<System.Guid>", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("ExpenseTracker.Domain.Entities.WalletShare", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser<System.Guid>", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ExpenseTracker.Domain.Entities.Wallet", "Wallet")
+                        .WithMany("Shares")
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -419,6 +535,13 @@ namespace ExpenseTracker.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("ExpenseTracker.Domain.Entities.Transfer", b =>
                 {
                     b.Navigation("Images");
+                });
+
+            modelBuilder.Entity("ExpenseTracker.Domain.Entities.Wallet", b =>
+                {
+                    b.Navigation("Shares");
+
+                    b.Navigation("Transfers");
                 });
 #pragma warning restore 612, 618
         }

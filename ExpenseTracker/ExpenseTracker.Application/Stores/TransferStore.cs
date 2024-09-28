@@ -28,7 +28,7 @@ public class TransferStore : ITransferStore
 
     public TransferViewModel GetById(TransferRequest request)
     {
-        var transfer = _repository.Transfers.GetById(request.TransferId, request.UserId);
+        var transfer = _repository.Transfers.GetById(request.TransferId);
         transfer.Images = _repository.ImageFiles.GetByTransferId(request.TransferId);
         var viewModel = transfer.ToViewModel();
 
@@ -37,7 +37,7 @@ public class TransferStore : ITransferStore
 
     public TransferViewModel GetForUpdate(UpdateTransferRequest request)
     {
-        var transfer = _repository.Transfers.GetById(request.TransferId, request.UserId);
+        var transfer = _repository.Transfers.GetById(request.TransferId);
         var viewModel = transfer.ToViewModel();
 
         return viewModel;
@@ -69,7 +69,7 @@ public class TransferStore : ITransferStore
 
         _repository.SaveChanges(); // ACID -> Atomicity
 
-        createdTransfer.Category = _repository.Categories.GetById(request.CategoryId, request.UserId);
+        createdTransfer.Category = _repository.Categories.GetById(request.CategoryId);
         var viewModel = createdTransfer.ToViewModel();
 
         return viewModel;
@@ -86,7 +86,7 @@ public class TransferStore : ITransferStore
     }
     public void Delete(TransferRequest request)
     {
-        _repository.Transfers.Delete(request.TransferId, request.UserId);
+        _repository.Transfers.Delete(request.TransferId);
         _repository.SaveChanges();
     }
 }
