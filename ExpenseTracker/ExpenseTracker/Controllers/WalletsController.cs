@@ -18,6 +18,8 @@ public class WalletsController : Controller
     {
         var wallets = _store.GetAll(request);
 
+        ViewBag.Search = request.Search;
+
         return View(wallets);
     }
 
