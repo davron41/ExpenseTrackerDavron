@@ -61,6 +61,16 @@ internal sealed class WalletRepository : RepositoryBase<Wallet>, IWalletReposito
         return wallet;
     }
 
+    public Wallet? GetMain(Guid userId)
+    {
+        var wallet = _context.Wallets
+            .AsTracking()
+            .Include(x => x.Owner)
+            .FirstOrDefault(x => x.OwnerId == userId && x.IsMain);
+
+        return wallet;
+    }
+
     public void Delete(int id, Guid userId)
     {
         var wallet = _context.Wallets
