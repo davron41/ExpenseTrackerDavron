@@ -16,7 +16,7 @@ internal sealed class WalletStore : IWalletStore
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
-    public List<WalletViewModel> GetAll(UserRequest request)
+    public List<WalletViewModel> GetAll(GetWalletsRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
 
@@ -27,6 +27,17 @@ internal sealed class WalletStore : IWalletStore
             .ToList();
 
         return viewModels;
+    }
+
+    public WalletViewModel GetById(WalletRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var wallet = _repository.Wallets.GetById(request.Id, request.UserId);
+
+        var viewModel = wallet.ToViewModel();
+
+        return viewModel;
     }
 
     public WalletViewModel Create(CreateWalletRequest request)
@@ -50,6 +61,28 @@ internal sealed class WalletStore : IWalletStore
         var request = GetDefaultWallet(userId);
 
         return Create(request);
+    }
+
+    public WalletViewModel Update(UpdateWalletRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var entity = request.ToEntity();
+
+        _repository.Wallets.Update(entity);
+        _repository.SaveChanges();
+
+        var viewModel = entity.ToViewModel();
+
+        return viewModel;
+    }
+
+    public void Delete(WalletRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        _repository.Wallets.Delete(request.Id, request.UserId);
+        _repository.SaveChanges();
     }
 
     private static CreateWalletRequest GetDefaultWallet(Guid userId) => new(
