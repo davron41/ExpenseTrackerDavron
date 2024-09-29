@@ -1,9 +1,12 @@
-﻿@using ExpenseTracker.Application.Requests.Common
+﻿@using ExpenseTracker.Application.Requests.Wallet
 @inject ExpenseTracker.Application.Stores.Interfaces.IWalletStore walletStore;
 @inject ExpenseTracker.Application.Services.Interfaces.ICurrentUserService currentUserService;
 
 @{
-    var userRequest = new UserRequest(currentUserService.GetCurrentUserId());
+    var request = new GetWalletsRequest(currentUserService.GetCurrentUserId(), string.Empty);
+    var isDashboard = ViewData["isDashboard"] == null
+        ? false
+        : (bool)(ViewData["isDashboard"]);
 }
 
 <!DOCTYPE html>
@@ -35,12 +38,15 @@
                     </a>
                 </div>
                 <div>
-                    <select name="wallets" id="wallets">
-                        @foreach (var wallet in walletStore.GetAll(userRequest))
-                        {
-                            <option value="@wallet.Id">@wallet.Name</option>
-                        }
-                    </select>
+                    @if (isDashboard)
+                    {
+                        <select class="navigation" name="wallets" id="wallets">
+                            @foreach (var wallet in walletStore.GetAll(request))
+                            {
+                                <option value="@wallet.Id">@wallet.Name</option>
+                            }
+                        </select>
+                    }
                     <i class="fa-solid fa-bell"></i>
                     <i class="fa-solid fa-message"></i>
                     <img class="profile-pic" src="~/profile.jpg" />
