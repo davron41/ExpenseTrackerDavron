@@ -1,9 +1,11 @@
 ﻿using ExpenseTracker.Application.Requests.Category;
 using ExpenseTracker.Application.Services.Interfaces;
 using ExpenseTracker.Application.ViewModels.Category;
+using ExpenseTracker.Domain.Exceptions;
 using ExpenseTracker.Domain.Interfaces;
 using ExpenseTracker.Mappings;
 using ExpenseTracker.Stores.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Stores;
 
@@ -31,7 +33,7 @@ public class CategoryStore : ICategoryStore
 
     public CategoryViewModel GetById(CategoryRequest request)
     {
-        var entity = _repository.Categories.GetById(request.CategoryId);
+        var entity = _repository.Categories.GetById(request.Id);
 
         return entity.ToViewModel();
     }
@@ -54,13 +56,23 @@ public class CategoryStore : ICategoryStore
 
         var entity = request.ToEntity();
 
-        _repository.Categories.Update(entity);
-        _repository.SaveChanges();
+        try
+        {
+            _repository.Categories.Update(entity);
+            _repository.SaveChanges();
+        }
+        catch(DbUpdateConcurrencyException)
+        {
+            if (!_repository.Categories.Exists(request.Id))
+            {
+                throw new EntityNotFoundException($"Category with id: {request.Id} is not found.");
+            }
+        }
     }
 
     public void Delete(CategoryRequest request)
     {
-        _repository.Categories.Delete(request.CategoryId);
+        _repository.Categories.Delete(request.Id);
         _repository.SaveChanges();
     }
 }

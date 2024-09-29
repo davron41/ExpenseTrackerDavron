@@ -1,89 +1,68 @@
-﻿using ExpenseTracker.Application.Requests.Common;
+﻿using ExpenseTracker.Application.Requests.Category;
+using ExpenseTracker.Application.Requests.Common;
 using ExpenseTracker.Application.Requests.Transfer;
 using ExpenseTracker.Application.ViewModels.Transfer;
-using ExpenseTracker.Mappings;
 using ExpenseTracker.Stores.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Controllers;
 
 public class TransfersController : Controller
 {
     public const int MaxFileSize = 2 * 1024 * 1024;
-    public const int MinFileSize = 10 * 1024;
+    public const int MinFileSize = 1024;
 
     private static readonly List<string> _allowedFileTypes =
     [
         "png", "jpeg", "gif", "pdf"
     ];
 
-    private readonly ITransferStore _store;
+    private readonly ITransferStore _transferStore;
     private readonly ICategoryStore _categoryStore;
 
     public TransfersController(ITransferStore store, ICategoryStore categoryStore)
     {
-        _store = store;
-        _categoryStore = categoryStore;
+        _transferStore = store ?? throw new ArgumentNullException(nameof(store));
+        _categoryStore = categoryStore ?? throw new ArgumentNullException(nameof(categoryStore));
     }
 
-
-    public IActionResult Index(GetTransfersRequest request)
+    public IActionResult Index([FromQuery] GetTransfersRequest request)
     {
-        var result = _store.GetAll(request);
+        var transfers = _transferStore.GetAll(request);
+        var categories = _categoryStore.GetAll(new GetCategoriesRequest(request.UserId, null));
 
         ViewBag.Search = request.Search;
+        ViewBag.Categories = categories;
+        ViewBag.SelectedCategory = request.CategoryId;
 
-        var getCategoriesRequest = request.ToGetCategoriesRequest();
-
-        var categoryRequest = request.ToCategoryRequest();
-        ViewBag.Categories = _categoryStore.GetAll(getCategoriesRequest);
-        ViewBag.SelectedCategory = request?.CategoryId == null ? _categoryStore.GetById(categoryRequest) : null;
-
-        return View(result);
+        return View(transfers);
     }
 
-    public IActionResult Details(TransferRequest request)
+    public IActionResult Details([FromRoute] TransferRequest request)
     {
-        if (request?.TransferId == null)
-        {
-            return NotFound();
-        }
-
-        var transfer = _store.GetById(request);
-
-        if (transfer is null)
-        {
-            return NotFound();
-        }
+        var transfer = _transferStore.GetById(request);
 
         return View(transfer);
     }
 
-    public IActionResult Create(UserRequest request)
+    public IActionResult Create([FromHeader] UserRequest request)
     {
-        //var getCategories = new GetCategoriesRequest();
-        //getCategories.UserId = request.UserId;
-        //getCategories.Search = null;
+        PopulateViewBag(request);
 
-        var categories = _categoryStore.GetAll(null!);
-        var defaultCategory = categories.FirstOrDefault();
-
-        ViewBag.Categories = categories;
-        ViewBag.DefaultCategory = new { defaultCategory?.Id, defaultCategory?.Name };
-
-        var model = new CreateTransferRequest(default, null, default, default, default)
-        {
-            Date = DateTime.Now
-        };
+        var model = new CreateTransferRequest(
+            UserId: request.UserId,
+            CategoryId: default,
+            Notes: default,
+            Amount: default,
+            Date: DateTime.UtcNow);
 
         return View(model);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(CreateTransferRequest request, List<IFormFile> attachments)
+    public IActionResult Create([FromForm] CreateTransferRequest request, [FromForm] List<IFormFile> attachments)
     {
         if (!ModelState.IsValid)
         {
@@ -94,42 +73,33 @@ public class TransfersController : Controller
         {
             if (!TryValidateFile(ModelState, attachment))
             {
+                PopulateViewBag(request, request.CategoryId);
+
                 return View(request);
             }
         }
 
-        var createdTransfer = _store.Create(request, attachments);
+        var createdTransfer = _transferStore.Create(request, attachments);
 
         return RedirectToAction(nameof(Details), new { id = createdTransfer.Id });
     }
 
-    public IActionResult Edit([FromRoute] UpdateTransferRequest request)
+    public IActionResult Edit([FromRoute] TransferRequest request)
     {
-        if (request?.TransferId == null)
-        {
-            return NotFound();
-        }
+        var transfer = _transferStore.GetById(request);
 
-        var viewModel = _store.GetForUpdate(request);
-
-        if (viewModel is null)
-        {
-            return NotFound();
-        }
-
-        var categories = _categoryStore.GetAll(null!);
-        ViewBag.Categories = categories;
-
-        return View(viewModel);
+        PopulateViewBag(request, transfer.Category.Id);
+        
+        return View(transfer);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int? id, [FromBody] UpdateTransferRequest request)
+    public IActionResult Edit([FromRoute] int id, [FromBody] UpdateTransferRequest request)
     {
-        if (id != request.TransferId)
+        if (id != request.Id)
         {
-            return NotFound();
+            return BadRequest("Route id does not match with body id.");
         }
 
         if (!ModelState.IsValid)
@@ -137,38 +107,14 @@ public class TransfersController : Controller
             return View(request);
         }
 
-        try
-        {
-            _store.Update(request);
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!TransferExists(request))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
+        _transferStore.Update(request);
 
         return RedirectToAction(nameof(Index));
     }
 
     public IActionResult Delete([FromRoute] TransferRequest request)
     {
-        if (request?.TransferId == null)
-        {
-            return NotFound();
-        }
-
-        var transfer = _store.GetById(request);
-
-        if (transfer is null)
-        {
-            return NotFound();
-        }
+        var transfer = _transferStore.GetById(request);
 
         return View(transfer);
     }
@@ -177,14 +123,7 @@ public class TransfersController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeleteConfirmed([FromRoute] TransferRequest request)
     {
-        var transfer = _store.GetById(request);
-
-        if (transfer is null)
-        {
-            return NotFound();
-        }
-
-        _store.Delete(request);
+        _transferStore.Delete(request);
 
         return RedirectToAction(nameof(Index));
     }
@@ -198,21 +137,14 @@ public class TransfersController : Controller
     [Route("getTransfers")]
     public ActionResult<TransferViewModel> GetTransfers(GetTransfersRequest request)
     {
-        var result = _store.GetAll(request);
+        var result = _transferStore.GetAll(request);
 
         return Ok(result);
     }
 
-    private bool TransferExists(UpdateTransferRequest request)
-    {
-        var transferRequest = request.ToTransferRequest();
-
-        return _store.GetById(transferRequest) is not null;
-    }
-
     private static bool TryValidateFile(ModelStateDictionary modelState, IFormFile? formFile)
     {
-        if (formFile is null) // FIle is not required
+        if (formFile is null)
         {
             return true;
         }
@@ -239,5 +171,16 @@ public class TransfersController : Controller
         }
 
         return true;
+    }
+
+    private void PopulateViewBag(UserRequest request, int? categoryId = null)
+    {
+        var categories = _categoryStore.GetAll(new GetCategoriesRequest(request.UserId, null));
+        var defaultCategory = categoryId.HasValue
+            ? categories.First(x => x.Id == categoryId.Value)
+            : categories.FirstOrDefault();
+
+        ViewBag.Categories = categories;
+        ViewBag.DefaultCategory = defaultCategory;
     }
 }

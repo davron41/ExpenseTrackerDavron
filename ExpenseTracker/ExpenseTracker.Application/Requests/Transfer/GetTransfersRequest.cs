@@ -4,7 +4,7 @@ namespace ExpenseTracker.Application.Requests.Transfer;
 
 public sealed record GetTransfersRequest(
     Guid UserId,
-    int CategoryId,
+    int? CategoryId,
     string? Search,
     decimal MaxAmount,
     decimal? MinAmount)

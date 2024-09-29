@@ -21,6 +21,7 @@ public static class CategoryMappings
     {
         return new Category
         {
+            Id = request.Id,
             Name = request.Name,
             Description = request.Description,
             Type = request.Type,

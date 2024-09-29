@@ -1,5 +1,4 @@
-﻿using ExpenseTracker.Application.Requests.Category;
-using ExpenseTracker.Application.Requests.Transfer;
+﻿using ExpenseTracker.Application.Requests.Transfer;
 using ExpenseTracker.Application.ViewModels.Transfer;
 using ExpenseTracker.Domain.Entities;
 
@@ -20,8 +19,6 @@ public static class TransferMappings
         };
     }
 
-
-
     public static Transfer ToEntity(this CreateTransferRequest transfer)
     {
         return new Transfer
@@ -34,6 +31,7 @@ public static class TransferMappings
             Wallet = null!
         };
     }
+
     public static Transfer ToEntity(this UpdateTransferRequest request)
     {
         return new Transfer
@@ -45,19 +43,5 @@ public static class TransferMappings
             Category = null,
             Wallet = null!,
         };
-    }
-
-    public static TransferRequest ToTransferRequest(this UpdateTransferRequest request)
-    {
-        return new TransferRequest(request.UserId, request.TransferId);
-    }
-
-    public static GetCategoriesRequest ToGetCategoriesRequest(this GetTransfersRequest request)
-    {
-        return new GetCategoriesRequest(request.UserId, request.Search);
-    }
-    public static CategoryRequest ToCategoryRequest(this GetTransfersRequest request)
-    {
-        return new CategoryRequest(request.UserId, request.CategoryId);
     }
 }

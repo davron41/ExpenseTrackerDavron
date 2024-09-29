@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace ExpenseTracker.Infrastructure;
+namespace ExpenseTracker.Infrastructure.Persistence;
 
 public class ExpenseTrackerDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid>
 {

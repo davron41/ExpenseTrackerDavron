@@ -1,8 +1,11 @@
-using ExpenseTracker.Infrastructure.Email;
-using ExpenseTracker.Infrastructure.Email.Interfaces;
+using ExpenseTracker.Application.Requests.Auth;
+using ExpenseTracker.Application.Requests.Wallet;
+using ExpenseTracker.Application.Services.Interfaces;
+using ExpenseTracker.Application.Stores.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 
 namespace ExpenseTracker.Controllers;
 
@@ -12,15 +15,18 @@ public class AccountController : Controller
     private readonly UserManager<IdentityUser<Guid>> _userManager;
     private readonly SignInManager<IdentityUser<Guid>> _signInManager;
     private readonly IEmailService _emailService;
+    private readonly IWalletStore _walletStore;
 
     public AccountController(
         UserManager<IdentityUser<Guid>> userManager,
         SignInManager<IdentityUser<Guid>> signInManager,
-        IEmailService emailService)
+        IEmailService emailService,
+        IWalletStore walletStore)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _emailService = emailService;
+        _walletStore = walletStore;
     }
 
     [HttpGet]
@@ -32,23 +38,24 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+    public async Task<IActionResult> Login(LoginUserRequest request, string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
 
         if (!ModelState.IsValid)
         {
-            return View(model);
+            return View(request);
         }
 
-        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
+        var result = await _signInManager.PasswordSignInAsync(request.Email, request.Password, true, false);
+
         if (result.Succeeded)
         {
             return RedirectToLocal(returnUrl);
         }
 
         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-        return View(model);
+        return View(request);
     }
 
     [HttpGet]
@@ -60,7 +67,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
+    public async Task<IActionResult> Register(RegisterUserRequest model, string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
 
@@ -74,13 +81,18 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
+            _walletStore.CreateDefault(user.Id);
             await _signInManager.SignInAsync(user, isPersistent: false);
+            var to = new List<MailboxAddress>
+            {
+                new MailboxAddress("", "jamshidchoriyev795@gmail.com"),
+                new MailboxAddress("", user.Email)
+            };
 
-            var emailMessage = new EmailMessage(
-                ["jamshidchoriyev795@gmail.com", "begjanmaxamatxanov@gmail.com", user.Email],
-                "Registration Confirmation",
+            _emailService.SendEmail(
+                to, 
+                "Registration Confirmation", 
                 "Thank you for registering to Expense Tracker.");
-            _emailService.SendEmail(emailMessage);
 
             return RedirectToLocal(returnUrl);
         }

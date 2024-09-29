@@ -17,22 +17,18 @@ public class CategoriesController : Controller
 
     public IActionResult Index([FromQuery] GetCategoriesRequest request)
     {
-        var result = _store.GetAll(request);
+        var categories = _store.GetAll(request);
+
         ViewBag.Search = request.Search;
 
-        return View(result);
+        return View(categories);
     }
 
     public IActionResult Details([FromRoute] CategoryRequest request)
     {
-        if (request?.CategoryId == null)
-        {
-            return RedirectToAction("NotFoundError", "Home");
-        }
+        var category = _store.GetById(request);
 
-        var result = _store.GetById(request);
-
-        return View(result);
+        return View(category);
     }
 
     [HttpGet]
@@ -43,82 +39,47 @@ public class CategoriesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(CreateCategoryRequest request)
+    public IActionResult Create([FromForm] CreateCategoryRequest request)
     {
         if (!ModelState.IsValid)
         {
             return View(request);
         }
 
-        var createdCategory = _store.Create(request);
+        _store.Create(request);
 
         return RedirectToAction(nameof(Index));
     }
 
     public IActionResult Edit([FromRoute] CategoryRequest request)
     {
-        if (request?.CategoryId == null)
-        {
-            return NotFound();
-        }
-
         var category = _store.GetById(request);
-
-        if (category is null)
-        {
-            return NotFound();
-        }
 
         return View(category);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, [FromBody] UpdateCategoryRequest request)
+    public IActionResult Edit([FromRoute] int id, [FromForm] UpdateCategoryRequest request)
     {
-        if (id != request.CategoryId)
+        if (id != request.Id)
         {
-            return NotFound();
+            return BadRequest($"Route id does not match with body id.");
         }
 
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            try
-            {
-                _store.Update(request);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(request))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToAction(nameof(Index));
+            return View(request);
         }
-        return View(request);
+
+        _store.Update(request);
+
+        return RedirectToAction(nameof(Details), new { id = request.Id });
     }
 
-    public IActionResult Delete(int id, CategoryRequest request)
+    public IActionResult Delete([FromRoute] CategoryRequest request)
     {
-        if (request?.CategoryId == null)
-        {
-            return NotFound();
-        }
-
-        // request.CategoryId = id;
-
         var category = _store.GetById(request);
-
-        if (category is null)
-        {
-            return NotFound();
-        }
 
         return View(category);
     }
@@ -127,14 +88,8 @@ public class CategoriesController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeleteConfirmed([FromRoute] CategoryRequest request)
     {
-        var category = _store.GetById(request);
-
-        if (category is null)
-        {
-            return NotFound();
-        }
-
         _store.Delete(request);
+
         return RedirectToAction(nameof(Index));
     }
 
@@ -144,15 +99,10 @@ public class CategoriesController : Controller
     /// <param name="search"></param>
     /// <returns>List of filtered categories</returns>
     [Route("getCategories")]
-    public ActionResult<CategoryViewModel> GetCategories(GetCategoriesRequest request)
+    public ActionResult<CategoryViewModel> GetCategories([FromQuery] GetCategoriesRequest request)
     {
-        var result = _store.GetAll(request);
+        var categories = _store.GetAll(request);
 
-        return Ok(result);
-    }
-
-    private bool CategoryExists(UpdateCategoryRequest request)
-    {
-        return false;
+        return Ok(categories);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ExpenseTracker.Domain.Interfaces;
+using ExpenseTracker.Infrastructure.Persistence;
 
 namespace ExpenseTracker.Infrastructure.Repositories;
 
