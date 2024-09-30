@@ -1,7 +1,10 @@
 ﻿using ExpenseTracker.Application.Requests.Category;
 using ExpenseTracker.Application.Requests.Common;
 using ExpenseTracker.Application.Requests.Transfer;
+using ExpenseTracker.Application.Requests.Wallet;
+using ExpenseTracker.Application.Stores.Interfaces;
 using ExpenseTracker.Application.ViewModels.Transfer;
+using ExpenseTracker.Domain.Interfaces;
 using ExpenseTracker.Stores.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -20,21 +23,26 @@ public class TransfersController : Controller
 
     private readonly ITransferStore _transferStore;
     private readonly ICategoryStore _categoryStore;
+    private readonly IWalletStore _walletStore;
 
-    public TransfersController(ITransferStore store, ICategoryStore categoryStore)
+    public TransfersController(ITransferStore store, ICategoryStore categoryStore,IWalletStore walletStore)
     {
         _transferStore = store ?? throw new ArgumentNullException(nameof(store));
         _categoryStore = categoryStore ?? throw new ArgumentNullException(nameof(categoryStore));
+        _walletStore = walletStore ?? throw new ArgumentNullException(nameof(walletStore));
     }
 
     public IActionResult Index([FromQuery] GetTransfersRequest request)
     {
         var transfers = _transferStore.GetAll(request);
         var categories = _categoryStore.GetAll(new GetCategoriesRequest(request.UserId, null));
+        var wallets = _walletStore.GetAll(new GetWalletsRequest(request.UserId,null));
+
 
         ViewBag.Search = request.Search;
         ViewBag.Categories = categories;
         ViewBag.SelectedCategory = request.CategoryId;
+        ViewBag.Wallets = wallets;
 
         return View(transfers);
     }
