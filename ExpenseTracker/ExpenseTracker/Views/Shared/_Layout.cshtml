@@ -40,12 +40,13 @@
                 <div>
                     @if (isDashboard)
                     {
-                        <select class="navigation" name="wallets" id="wallets">
-                            @foreach (var wallet in walletStore.GetAll(request))
-                            {
-                                <option value="@wallet.Id">@wallet.Name</option>
-                            }
-                        </select>
+                        <ejs-combobox id="wallets"
+                                      name="wallets"
+                                      width="250px"
+                                      dataSource="@ViewBag.Wallets"
+                                      value="@ViewBag.CurrentValue"
+                                      allowObjectBinding="true">
+                        </ejs-combobox>
                     }
                     <i class="fa-solid fa-bell"></i>
                     <i class="fa-solid fa-message"></i>
