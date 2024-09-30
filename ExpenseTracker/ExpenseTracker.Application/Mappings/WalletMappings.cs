@@ -29,7 +29,6 @@ public static class WalletMappings
     {
         Name = request.Name,
         Description = request.Description,
-        IsMain = request.IsMain,
         Balance = request.Balance,
         Owner = null!,
         OwnerId = request.UserId,

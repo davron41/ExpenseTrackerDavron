@@ -11,5 +11,4 @@ public sealed record UpdateWalletRequest(
         UserId: UserId,
         Name: Name,
         Description: Description,
-        Balance: Balance,
-        IsMain: IsMain);
+        Balance: Balance);
