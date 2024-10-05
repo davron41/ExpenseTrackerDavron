@@ -54,6 +54,15 @@ body {
     color: inherit;
 }
 
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
 /*Grid*/
 .e-grid {
     border: 0;
@@ -482,7 +491,3 @@ input[type="file"]:hover {
     font-size: 15px;
     color: #D0D3D8;
 }
-
-/*.search-container:hover {
-    animation: hoverShake 0.15s linear 2;
-}*/

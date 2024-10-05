@@ -6,7 +6,10 @@ namespace ExpenseTracker.Application.Stores.Interfaces;
 
 public interface IWalletStore
 {
+    List<WalletViewModel> GetAll(GetWalletsRequest request);
+    WalletViewModel GetById(WalletRequest request);
     WalletViewModel Create(CreateWalletRequest request);
     WalletViewModel CreateDefault(Guid userId);
-    List<WalletViewModel> GetAll(UserRequest request);
+    WalletViewModel Update(UpdateWalletRequest request);
+    void Delete(WalletRequest request);
 }
