@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #dddddd;
+        }
+
+        .email-header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+
+            .email-header h1 {
+                color: #333333;
+            }
+
+        .email-content {
+            font-size: 16px;
+            color: #555555;
+            line-height: 1.5;
+        }
+
+            .email-content p {
+                margin-bottom: 20px;
+            }
+
+        .btn-confirm {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .email-footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #999999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <h1>Confirm Your Email</h1>
+        </div>
+        <div class="email-content">
+            <p>Hi [UserName],</p>
+            <p>Thank you for signing up for Expense Tracker Manager! To complete your registration, please confirm your email address by clicking the button below:</p>
+            <p style="text-align: center;">
+                <a href="[ConfirmationLink]" class="btn-confirm">Confirm My Email</a>
+            </p>
+            <p>If the button above doesn't work, copy and paste the following link into your browser:</p>
+            <p>[ConfirmationLink]</p>
+            <p>If you did not sign up for [Expense Tracker Manager], you can safely ignore this email.</p>
+            <p>Thank you,<br>The Expense Tracker Manager Team</p>
+        </div>
+        <div class="email-footer">
+            <p>If you need help, contact us at support.expensemanager@expense-manager.uz</p>
+        </div>
+    </div>
+</body>
+</html>

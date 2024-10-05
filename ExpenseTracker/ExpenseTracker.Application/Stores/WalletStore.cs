@@ -50,6 +50,7 @@ internal sealed class WalletStore : IWalletStore
         var createdWallet = _repository.Wallets.Create(entity);
         _repository.SaveChanges();
 
+        createdWallet.Owner = _repository.Users.GetById(request.UserId);
         var viewModel = createdWallet.ToViewModel();
 
         return viewModel;

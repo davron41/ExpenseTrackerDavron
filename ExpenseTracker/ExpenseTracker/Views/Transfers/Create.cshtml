@@ -12,6 +12,22 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" name="TransactionId" value="@Model" />
                 <div class="mb-3">
+                    <ejs-combobox id="wallets-combobox"
+                                  name="WalletId"
+                                  filterType="Contains"
+                                  allowFiltering="true"
+                                  allowObjectBinding="true"
+                                  ignoreAccent="true"
+                                  dataSource="@ViewBag.Wallets"
+                                  placeholder="Select a wallet"
+                                  popupHeight="220px"
+                                  value="@ViewBag.DefaultWallet"
+                                  floatLabelType="Always">
+                        <e-combobox-fields value="Id" text="Name"></e-combobox-fields>
+                    </ejs-combobox>
+                    <span asp-validation-for="WalletId" class="text-danger fs-6"></span>
+                </div>
+                <div class="mb-3">
                     <ejs-combobox id="categories-combobox"
                                   name="categoryId"
                                   filterType="Contains" 
