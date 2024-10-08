@@ -12,7 +12,7 @@
                 <div class="d-flex gap-3">
                     <ejs-textbox id="search-box"
                                  name="search"
-                                 placeholder="Search categories"
+                                 placeholder="Search wallets..."
                                  floatLabelType="Never"
                                  width="300px"
                                  input="onSearchChange"
@@ -26,7 +26,7 @@
 </div>
 
 <div class="row mt-4">
-    <div class="col-md-8">
+    <div class="col-md-9">
         <ejs-grid id="wallets-list" dataSource="@Model" allowSorting="true" allowPaging="true">
             <e-grid-pagesettings pageSize="8"></e-grid-pagesettings>
             <e-grid-columns>
@@ -38,7 +38,7 @@
             </e-grid-columns>
         </ejs-grid>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="widget h-100 d-flex justify-content-center align-items-center">
             <i class="fa-solid fa-shapes fa-2xl"></i>
         </div>

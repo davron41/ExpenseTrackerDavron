@@ -61,6 +61,7 @@ public class TransfersController : Controller
         var model = new CreateTransferRequest(
             UserId: request.UserId,
             CategoryId: default,
+            WalletId: default,
             Notes: default,
             Amount: default,
             Date: DateTime.UtcNow);
@@ -181,14 +182,21 @@ public class TransfersController : Controller
         return true;
     }
 
-    private void PopulateViewBag(UserRequest request, int? categoryId = null)
+    private void PopulateViewBag(UserRequest request, int? categoryId = null, int? walletId = null)
     {
         var categories = _categoryStore.GetAll(new GetCategoriesRequest(request.UserId, null));
+        var wallets = _walletStore.GetAll(new GetWalletsRequest(request.UserId, null));
+
         var defaultCategory = categoryId.HasValue
             ? categories.First(x => x.Id == categoryId.Value)
             : categories.FirstOrDefault();
+        var defaultWallet = walletId.HasValue
+            ? wallets.First(x => x.Id == walletId)
+            : wallets.FirstOrDefault();
 
+        ViewBag.Wallets = wallets;
         ViewBag.Categories = categories;
         ViewBag.DefaultCategory = defaultCategory;
+        ViewBag.DefaultWallet = defaultWallet;
     }
 }

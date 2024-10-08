@@ -7,6 +7,7 @@ public interface ICommonRepository
     IImageFileRepository ImageFiles { get; }
     IWalletRepository Wallets { get; }
     IWalletShareRepository WalletShares { get; }
+    IUserRepository Users { get; }
 
     public int SaveChanges();
 }
