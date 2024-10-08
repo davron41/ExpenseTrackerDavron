@@ -24,18 +24,18 @@ public class CategoriesController : Controller
         return View(categories);
     }
 
+    
     public IActionResult Details([FromRoute] CategoryRequest request)
     {
+        Console.WriteLine("Method is working");
         var category = _store.GetById(request);
 
-        return View(category);
+
+        return Json(category); // Return as JSON for AJAX
     }
 
-    [HttpGet]
-    public IActionResult Create()
-    {
-        return View();
-    }
+
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -43,20 +43,21 @@ public class CategoriesController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return View(request);
+            // Return a JSON response with errors
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                          .Select(e => e.ErrorMessage)
+                                          .ToList();
+
+            return Json(new { success = false, errors });
         }
 
+        // Proceed with creating the category
         _store.Create(request);
 
-        return RedirectToAction(nameof(Index));
+        // Return a JSON response indicating success
+        return Json(new { success = true });
     }
 
-    public IActionResult Edit([FromRoute] CategoryRequest request)
-    {
-        var category = _store.GetById(request);
-
-        return View(category);
-    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -64,33 +65,32 @@ public class CategoriesController : Controller
     {
         if (id != request.Id)
         {
-            return BadRequest($"Route id does not match with body id.");
+            return Json(new { success = false, message = "Route id does not match with body id." });
         }
 
         if (!ModelState.IsValid)
         {
-            return View(request);
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                          .Select(e => e.ErrorMessage)
+                                          .ToList();
+            return Json(new { success = false, errors });
         }
+
 
         _store.Update(request);
 
-        return RedirectToAction(nameof(Details), new { id = request.Id });
+        // Return a success message or status
+        return Json(new { success = true });
     }
 
-    public IActionResult Delete([FromRoute] CategoryRequest request)
-    {
-        var category = _store.GetById(request);
-
-        return View(category);
-    }
-
-    [HttpPost, ActionName("Delete")]
+    [HttpDelete, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public IActionResult DeleteConfirmed([FromRoute] CategoryRequest request)
     {
         _store.Delete(request);
 
-        return RedirectToAction(nameof(Index));
+        // Return a success message for AJAXa
+        return Json(new { success = true });
     }
 
     /// <summary>
