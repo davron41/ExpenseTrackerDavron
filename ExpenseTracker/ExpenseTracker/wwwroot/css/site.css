@@ -35,7 +35,6 @@ body {
     height: 92vh;
 }
 
-
 /*BreadCrumb*/
 .e-breadcrumb a, .e-breadcrumb a:hover {
     text-decoration: none !important;
@@ -686,6 +685,3 @@ select:hover {
 }
 
 
-/*.search-container:hover {
-    animation: hoverShake 0.15s linear 2;
-}*/

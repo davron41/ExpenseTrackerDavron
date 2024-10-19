@@ -2,7 +2,6 @@
 using ExpenseTracker.Application.ViewModels.Category;
 using ExpenseTracker.Stores.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Controllers;
 
@@ -24,17 +23,12 @@ public class CategoriesController : Controller
         return View(categories);
     }
 
-    
     public IActionResult Details([FromRoute] CategoryRequest request)
     {
-        Console.WriteLine("Method is working");
         var category = _store.GetById(request);
 
-
-        return Json(category); // Return as JSON for AJAX
+        return Json(category);
     }
-
-
 
 
     [HttpPost]
@@ -43,7 +37,6 @@ public class CategoriesController : Controller
     {
         if (!ModelState.IsValid)
         {
-            // Return a JSON response with errors
             var errors = ModelState.Values.SelectMany(v => v.Errors)
                                           .Select(e => e.ErrorMessage)
                                           .ToList();
@@ -51,13 +44,10 @@ public class CategoriesController : Controller
             return Json(new { success = false, errors });
         }
 
-        // Proceed with creating the category
         _store.Create(request);
 
-        // Return a JSON response indicating success
         return Json(new { success = true });
     }
-
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -76,10 +66,8 @@ public class CategoriesController : Controller
             return Json(new { success = false, errors });
         }
 
-
         _store.Update(request);
 
-        // Return a success message or status
         return Json(new { success = true });
     }
 
@@ -89,7 +77,6 @@ public class CategoriesController : Controller
     {
         _store.Delete(request);
 
-        // Return a success message for AJAXa
         return Json(new { success = true });
     }
 
