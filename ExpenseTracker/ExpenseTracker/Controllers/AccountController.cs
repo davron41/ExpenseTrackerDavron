@@ -1,14 +1,9 @@
 using ExpenseTracker.Application.Requests.Auth;
-using ExpenseTracker.Application.Requests.Wallet;
 using ExpenseTracker.Application.Services.Interfaces;
 using ExpenseTracker.Application.Stores.Interfaces;
-using ExpenseTracker.Domain.Interfaces;
-using ExpenseTracker.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using MimeKit;
 
 namespace ExpenseTracker.Controllers;
 
@@ -79,7 +74,7 @@ public class AccountController : Controller
             return View(model);
         }
 
-        var user = new IdentityUser<Guid> { Id = Guid.NewGuid(), UserName = model.Email, Email = model.Email };
+        var user = new IdentityUser<Guid> { Id = Guid.NewGuid(), UserName = model.UserName, Email = model.Email };
         var result = await _userManager.CreateAsync(user, model.Password);
 
         if (result.Succeeded)
@@ -96,7 +91,7 @@ public class AccountController : Controller
                 user.Email,
                 confirmationUrl);
 
-            return RedirectToAction(nameof(ConfirmEmail));
+            return RedirectToAction(nameof(RegisterConfirmation));
         }
 
         AddErrors(result);
@@ -112,7 +107,7 @@ public class AccountController : Controller
         return RedirectToAction(nameof(Login));
     }
 
-    public IActionResult ConfirmEmail()
+    public IActionResult RegisterConfirmation()
     {
         return View();
     }
@@ -156,7 +151,7 @@ public class AccountController : Controller
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
         var confirmationUrl = Url.Action(
-            nameof(ResetPassword),
+            nameof(PasswordReset),
             "Account",
             new { email = user.Email, token },
             protocol: Request.Scheme);
@@ -165,23 +160,23 @@ public class AccountController : Controller
             user.Email,
             confirmationUrl);
 
-        return RedirectToAction(nameof(ResetSent));
+        return RedirectToAction(nameof(PasswordReset));
     }
 
-    public IActionResult ResetSent()
+    public IActionResult PasswordReset()
     {
         return View();
     }
 
-    public IActionResult ResetPassword(string email, string token)
+    public IActionResult PasswordResetConfirmation(string email, string token)
     {
-        var request = new Application.Requests.Auth.ResetPasswordRequest(email, null, null, token);
+        var request = new ResetPasswordRequest(email, null, null, token);
 
         return View(request);
     }
 
     [HttpPost]
-    public async Task<IActionResult> ResetPassword([FromForm] Application.Requests.Auth.ResetPasswordRequest request)
+    public async Task<IActionResult> PasswordReset([FromForm] ResetPasswordRequest request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
