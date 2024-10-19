@@ -1,20 +1,28 @@
 ﻿using ExpenseTracker.Application.Mappings;
+using ExpenseTracker.Application.Models;
 using ExpenseTracker.Application.Requests.Common;
 using ExpenseTracker.Application.Requests.Wallet;
+using ExpenseTracker.Application.Requests.WalletShare;
+using ExpenseTracker.Application.Services.Interfaces;
 using ExpenseTracker.Application.Stores.Interfaces;
 using ExpenseTracker.Application.ViewModels.Wallet;
 using ExpenseTracker.Domain.Entities;
+using ExpenseTracker.Domain.Enums;
+using ExpenseTracker.Domain.Exceptions;
 using ExpenseTracker.Domain.Interfaces;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace ExpenseTracker.Application.Stores;
 
 internal sealed class WalletStore : IWalletStore
 {
     private readonly ICommonRepository _repository;
+    private readonly IEmailService _emailService;
 
-    public WalletStore(ICommonRepository repository)
+    public WalletStore(ICommonRepository repository, IEmailService emailService)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
     }
 
     public List<WalletViewModel> GetAll(GetWalletsRequest request)
@@ -93,6 +101,39 @@ internal sealed class WalletStore : IWalletStore
         _repository.SaveChanges();
     }
 
+    public void Share(CreateWalletShareRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var wallet = GetAndValidateWallet(request);
+
+        foreach (var userEmail in request.UsersToShare)
+        {
+            var user = _repository.Users.GetByEmail(userEmail.Text);
+
+            if (user is null)
+            {
+                var message = new EmailMessage(userEmail.Text, "there", "Collaboration Invitation", null);
+                _emailService.SendWalletInvitation(message);
+            }
+            else
+            {
+                var share = new WalletShare
+                {
+                    User = user,
+                    Wallet = wallet,
+                    AccessType = WalletAccessType.ReadAndWrite,
+                    Date = DateTime.UtcNow,
+                    IsAccepted = false,
+                };
+
+                _repository.WalletShares.Create(share);
+            }
+        }
+
+        _repository.SaveChanges();
+    }
+
     private static CreateWalletRequest GetDefaultWallet(Guid userId) => new(
         UserId: userId,
         Name: "Default Wallet",
@@ -105,5 +146,22 @@ internal sealed class WalletStore : IWalletStore
         {
             wallet.IsMain = false;
         }
+    }
+
+    private Wallet GetAndValidateWallet(CreateWalletShareRequest request)
+    {
+        var wallet = _repository.Wallets.GetById(request.WalletId);
+
+        if (wallet is null)
+        {
+            throw new EntityNotFoundException($"Wallet with id: {request.WalletId} is not found.");
+        }
+
+        if (wallet.OwnerId != request.UserId)
+        {
+            throw new ShareNotAllowedException("Only owner can share wallet.");
+        }
+
+        return wallet;
     }
 }

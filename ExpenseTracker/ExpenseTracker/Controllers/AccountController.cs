@@ -118,6 +118,43 @@ public class AccountController : Controller
         return View();
     }
 
+    public IActionResult ResendConfirmation()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ResendConfirmation(ResendConfirmationRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Invalid request");
+        }
+
+        var user = await _signInManager.UserManager.FindByEmailAsync(request.Email);
+
+        if (user is null)
+        {
+            return BadRequest("Invalid request");
+        }
+
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var confirmationUrl = Url.Action(
+            nameof(EmailConfirmed),
+            "Account",
+            new { email = user.Email, token },
+            protocol: Request.Scheme);
+
+        var emailMessage = new EmailMessage(request.Email, request.Email, "Email Confirmation", confirmationUrl);
+        var userAgent = _contextAccessor.HttpContext?.Request?.Headers?.UserAgent;
+        var agent = Parser.GetDefault().Parse(userAgent);
+        var userInfo = new UserInfo(agent.UA.ToString(), agent.OS.ToString());
+
+        _emailService.SendEmailConfirmation(emailMessage, userInfo);
+
+        return View();
+    }
+
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
@@ -141,7 +178,8 @@ public class AccountController : Controller
         if (!result.Succeeded)
         {
             ViewData["ErrorMessage"] = "The email confirmation link is invalid or expired. Please request a new confirmation email.";
-            return View();
+            ViewBag.Email = email;
+            return View(new ResendConfirmationRequest(email));
         }
 
         var actionUrl = Url.Action(
@@ -161,7 +199,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ForgotPassword(ExpenseTracker.Application.Requests.Auth.ForgotPasswordRequest request)
+    public async Task<IActionResult> ForgotPassword(Application.Requests.Auth.ForgotPasswordRequest request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
@@ -209,6 +247,12 @@ public class AccountController : Controller
         if (user is null)
         {
             return BadRequest("Invalid request");
+        }
+
+        if (!user.EmailConfirmed)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            await _userManager.ConfirmEmailAsync(user, token);
         }
 
         var result = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);

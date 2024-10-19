@@ -5,10 +5,8 @@ namespace ExpenseTracker.Application.Requests.WalletShare;
 internal sealed record UpdateWalletShareRequest(
     Guid UserId,
     int WalletId,
-    Guid ShareUserId,
-    WalletAccessType AccessType)
+    IEnumerable<UserItem> UsersToShare)
     : CreateWalletShareRequest(
         UserId,
         WalletId,
-        ShareUserId,
-        AccessType);
+        UsersToShare);

@@ -1,4 +1,5 @@
 ﻿using ExpenseTracker.Application.Requests.Wallet;
+using ExpenseTracker.Application.Requests.WalletShare;
 using ExpenseTracker.Application.Stores.Interfaces;
 using ExpenseTracker.Application.ViewModels.Wallet;
 using Microsoft.AspNetCore.Mvc;
@@ -83,6 +84,26 @@ public class WalletsController : Controller
     public IActionResult DeleteConfirmed([FromRoute] WalletRequest request)
     {
         _store.Delete(request);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    public IActionResult Share([FromRoute] WalletRequest request)
+    {
+        var shareRequest = new CreateWalletShareRequest(request.UserId, request.Id, []);
+
+        return View(shareRequest);
+    }
+
+    [HttpPost]
+    public IActionResult Share([FromForm] CreateWalletShareRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(request);
+        }
+
+        _store.Share(request);
 
         return RedirectToAction(nameof(Index));
     }

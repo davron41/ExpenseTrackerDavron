@@ -24,6 +24,13 @@ public class EmailService : IEmailService
         Send(emailMessage);
     }
 
+    public void SendInvitation(EmailMessage message)
+    {
+        var emailMessage = CreateEmailMessage(message, "Invitation");
+
+        Send(emailMessage);
+    }
+
     public void SendWalletInvitation(EmailMessage message)
     {
         var emailMessage = CreateEmailMessage(message, "Invitation");
