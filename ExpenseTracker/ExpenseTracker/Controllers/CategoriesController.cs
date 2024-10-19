@@ -2,7 +2,9 @@
 using ExpenseTracker.Application.ViewModels.Category;
 using ExpenseTracker.Stores.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+
 namespace ExpenseTracker.Controllers;
+
 public class CategoriesController : Controller
 {
     private readonly ICategoryStore _store;
