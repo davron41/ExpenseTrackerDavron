@@ -6,6 +6,5 @@ public record CreateWalletRequest(
     Guid UserId,
     string Name, 
     string? Description, 
-    decimal Balance, 
-    bool IsMain) 
+    decimal Balance) 
     : UserRequest(UserId: UserId);

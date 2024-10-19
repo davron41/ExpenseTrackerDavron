@@ -28,7 +28,8 @@ public static class TransferMappings
             Date = transfer.Date,
             CategoryId = transfer.CategoryId,
             Category = null,
-            Wallet = null!
+            Wallet = null!,
+            WalletId = transfer.WalletId
         };
     }
 

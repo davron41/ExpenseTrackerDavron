@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Email\Templates\EmailConfirmation.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Email\Templates\EmailConfirmation.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />

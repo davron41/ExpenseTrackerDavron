@@ -8,6 +8,11 @@ public static class WalletMappings
 {
     public static WalletViewModel ToViewModel(this Wallet wallet)
     {
+        if (wallet.Owner is null || string.IsNullOrEmpty(wallet.Owner.UserName))
+        {
+            throw new InvalidOperationException($"Wallet owner cannot be null.");
+        }
+
         return new WalletViewModel
         {
             Id = wallet.Id,
@@ -24,7 +29,6 @@ public static class WalletMappings
     {
         Name = request.Name,
         Description = request.Description,
-        IsMain = request.IsMain,
         Balance = request.Balance,
         Owner = null!,
         OwnerId = request.UserId,

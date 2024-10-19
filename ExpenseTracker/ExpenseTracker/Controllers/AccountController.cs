@@ -2,8 +2,11 @@ using ExpenseTracker.Application.Requests.Auth;
 using ExpenseTracker.Application.Requests.Wallet;
 using ExpenseTracker.Application.Services.Interfaces;
 using ExpenseTracker.Application.Stores.Interfaces;
+using ExpenseTracker.Domain.Interfaces;
+using ExpenseTracker.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 
@@ -82,19 +85,18 @@ public class AccountController : Controller
         if (result.Succeeded)
         {
             _walletStore.CreateDefault(user.Id);
-            await _signInManager.SignInAsync(user, isPersistent: false);
-            var to = new List<MailboxAddress>
-            {
-                new MailboxAddress("", "jamshidchoriyev795@gmail.com"),
-                new MailboxAddress("", user.Email)
-            };
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationUrl = Url.Action(
+                nameof(EmailConfirmed),           
+                "Account",                
+                new { email = user.Email, token },
+                protocol: Request.Scheme);
 
-            _emailService.SendEmail(
-                to, 
-                "Registration Confirmation", 
-                "Thank you for registering to Expense Tracker.");
+            _emailService.SendConfirmation(
+                user.Email,
+                confirmationUrl);
 
-            return RedirectToLocal(returnUrl);
+            return RedirectToAction(nameof(ConfirmEmail));
         }
 
         AddErrors(result);
@@ -108,6 +110,94 @@ public class AccountController : Controller
         await _signInManager.SignOutAsync();
 
         return RedirectToAction(nameof(Login));
+    }
+
+    public IActionResult ConfirmEmail()
+    {
+        return View();
+    }
+
+    public async Task<IActionResult> EmailConfirmed(string email, string token)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user is null)
+        {
+            ViewData["ErrorMessage"] = "The email confirmation link is invalid or expired. Please request a new confirmation email.";
+            return View();
+        }
+
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+
+        if (!result.Succeeded)
+        {
+            ViewData["ErrorMessage"] = "The email confirmation link is invalid or expired. Please request a new confirmation email.";
+            return View();
+        }
+
+        return View();
+    }
+
+    public IActionResult ForgotPassword()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ForgotPassword(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user is null)
+        {
+            return BadRequest("Invalid request");
+        }
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        var confirmationUrl = Url.Action(
+            nameof(ResetPassword),
+            "Account",
+            new { email = user.Email, token },
+            protocol: Request.Scheme);
+
+        _emailService.SendResetPassword(
+            user.Email,
+            confirmationUrl);
+
+        return RedirectToAction(nameof(ResetSent));
+    }
+
+    public IActionResult ResetSent()
+    {
+        return View();
+    }
+
+    public IActionResult ResetPassword(string email, string token)
+    {
+        var request = new Application.Requests.Auth.ResetPasswordRequest(email, null, null, token);
+
+        return View(request);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ResetPassword([FromForm] Application.Requests.Auth.ResetPasswordRequest request)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+
+        if (user is null)
+        {
+            return BadRequest("Invalid request");
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
+
+        if (result.Succeeded)
+        {
+            return RedirectToAction(nameof(Login));
+        }
+
+        return BadRequest("Invalid request");
     }
 
     private IActionResult RedirectToLocal(string? returnUrl)

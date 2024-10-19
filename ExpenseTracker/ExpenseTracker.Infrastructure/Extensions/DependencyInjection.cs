@@ -20,6 +20,7 @@ public static class DependencyInjection
         services.AddScoped<IImageFileRepository, ImageFileRepository>();
         services.AddScoped<IWalletRepository, WalletRepository>();
         services.AddScoped<IWalletShareRepository, WalletShareRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICommonRepository, CommonRepository>();
 
         services.AddScoped<IEmailService, EmailService>();
@@ -30,7 +31,7 @@ public static class DependencyInjection
         services
             .AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = false;
+                options.SignIn.RequireConfirmedAccount = true;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
 
                 options.Password.RequireDigit = true;

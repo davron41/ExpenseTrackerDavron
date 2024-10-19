@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Infrastructure.Repositories;
 
-internal class CategoryRepository : RepositoryBase<Category>, ICategoryRepository
+internal sealed class CategoryRepository : RepositoryBase<Category>, ICategoryRepository
 {
     public CategoryRepository(ExpenseTrackerDbContext context)
         : base(context)

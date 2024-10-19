@@ -3,7 +3,7 @@ using ExpenseTracker.Infrastructure.Persistence;
 
 namespace ExpenseTracker.Infrastructure.Repositories;
 
-internal class CommonRepository : ICommonRepository
+internal sealed class CommonRepository : ICommonRepository
 {
     private readonly ExpenseTrackerDbContext _context;
 
@@ -16,11 +16,14 @@ internal class CommonRepository : ICommonRepository
     private readonly IImageFileRepository _imageFiles;
     public IImageFileRepository ImageFiles => _imageFiles;
 
-    private readonly IWalletRepository _wallet;
-    public IWalletRepository Wallets => _wallet;
+    private readonly IWalletRepository _wallets;
+    public IWalletRepository Wallets => _wallets;
 
-    private readonly IWalletShareRepository _walletShare;
-    public IWalletShareRepository WalletShares => _walletShare;
+    private readonly IWalletShareRepository _walletShares;
+    public IWalletShareRepository WalletShares => _walletShares;
+
+    private readonly IUserRepository _users;
+    public IUserRepository Users => _users;
 
     public CommonRepository(ExpenseTrackerDbContext context)
     {
@@ -29,8 +32,9 @@ internal class CommonRepository : ICommonRepository
         _categories = new CategoryRepository(context);
         _transfers = new TransferRepository(context);
         _imageFiles = new ImageFileRepository(context);
-        _wallet = new WalletRepository(context);
-        _walletShare = new WalletShareRepository(context);
+        _wallets = new WalletRepository(context);
+        _walletShares = new WalletShareRepository(context);
+        _users = new UserRepository(context);
     }
 
     public int SaveChanges() => _context.SaveChanges();
