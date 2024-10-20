@@ -1,13 +1,9 @@
 using ExpenseTracker.Application.Models;
 using ExpenseTracker.Application.Requests.Auth;
-using ExpenseTracker.Application.Requests.Wallet;
 using ExpenseTracker.Application.Services.Interfaces;
 using ExpenseTracker.Application.Stores.Interfaces;
-using ExpenseTracker.Domain.Interfaces;
-using ExpenseTracker.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using MimeKit;
@@ -85,8 +81,9 @@ public class AccountController : Controller
             return View(request);
         }
 
-        var user = new IdentityUser<Guid> { Id = Guid.NewGuid(), UserName = request.Email, Email = request.Email };
-        var result = await _userManager.CreateAsync(user, request.Password);
+        var user = new IdentityUser<Guid> { Id = Guid.NewGuid(), UserName = model.UserName, Email = model.Email };
+        var result = await _userManager.CreateAsync(user, model.Password);
+
 
         if (result.Succeeded)
         {
@@ -122,6 +119,7 @@ public class AccountController : Controller
     {
         return View();
     }
+
 
     [HttpPost]
     public async Task<IActionResult> ResendConfirmation(ResendConfirmationRequest request)
@@ -234,13 +232,15 @@ public class AccountController : Controller
 
     public IActionResult PasswordReset(string email, string token)
     {
-        var request = new Application.Requests.Auth.ResetPasswordRequest(email, null, null, token);
+        var request = new ResetPasswordRequest(email, null, null, token);
 
         return View(request);
     }
 
     [HttpPost]
+
     public async Task<IActionResult> PasswordReset([FromForm] Application.Requests.Auth.ResetPasswordRequest request)
+
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
