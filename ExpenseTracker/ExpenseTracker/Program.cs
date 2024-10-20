@@ -1,3 +1,4 @@
+using ExpenseTracker.Application.Hubs;
 using ExpenseTracker.Extensions;
 using ExpenseTracker.Infrastructure;
 using ExpenseTracker.Infrastructure.Persistence;
@@ -33,5 +34,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<NotificationHub>("/notification-hub");
 
 app.Run();

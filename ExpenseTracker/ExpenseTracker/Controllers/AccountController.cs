@@ -1,3 +1,4 @@
+using ExpenseTracker.Application.Models;
 using ExpenseTracker.Application.Requests.Auth;
 using ExpenseTracker.Application.Requests.Wallet;
 using ExpenseTracker.Application.Services.Interfaces;
@@ -8,7 +9,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using MimeKit;
+using UAParser;
 
 namespace ExpenseTracker.Controllers;
 
@@ -19,17 +22,20 @@ public class AccountController : Controller
     private readonly SignInManager<IdentityUser<Guid>> _signInManager;
     private readonly IEmailService _emailService;
     private readonly IWalletStore _walletStore;
+    private readonly IHttpContextAccessor _contextAccessor;
 
     public AccountController(
         UserManager<IdentityUser<Guid>> userManager,
         SignInManager<IdentityUser<Guid>> signInManager,
         IEmailService emailService,
-        IWalletStore walletStore)
+        IWalletStore walletStore,
+        IHttpContextAccessor contextAccessor)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _emailService = emailService;
         _walletStore = walletStore;
+        _contextAccessor = contextAccessor;
     }
 
     [HttpGet]
@@ -70,17 +76,17 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register(RegisterUserRequest model, string? returnUrl = null)
+    public async Task<IActionResult> Register(RegisterUserRequest request, string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
 
         if (!ModelState.IsValid)
         {
-            return View(model);
+            return View(request);
         }
 
-        var user = new IdentityUser<Guid> { Id = Guid.NewGuid(), UserName = model.Email, Email = model.Email };
-        var result = await _userManager.CreateAsync(user, model.Password);
+        var user = new IdentityUser<Guid> { Id = Guid.NewGuid(), UserName = request.Email, Email = request.Email };
+        var result = await _userManager.CreateAsync(user, request.Password);
 
         if (result.Succeeded)
         {
@@ -91,17 +97,62 @@ public class AccountController : Controller
                 "Account",                
                 new { email = user.Email, token },
                 protocol: Request.Scheme);
+            
+            var emailMessage = new EmailMessage(request.Email, request.Email, "Email Confirmation", confirmationUrl);
+            var userAgent = _contextAccessor.HttpContext?.Request?.Headers?.UserAgent;
+            var agent = Parser.GetDefault().Parse(userAgent);
+            var userInfo = new UserInfo(agent.UA.ToString(), agent.OS.ToString());
 
-            _emailService.SendConfirmation(
-                user.Email,
-                confirmationUrl);
+            _emailService.SendEmailConfirmation(emailMessage, userInfo);
 
-            return RedirectToAction(nameof(ConfirmEmail));
+            return RedirectToAction(nameof(RegisterConfirmation));
         }
 
         AddErrors(result);
 
-        return View(model);
+        return View(request);
+    }
+
+    public IActionResult RegisterConfirmation()
+    {
+        return View();
+    }
+
+    public IActionResult ResendConfirmation()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ResendConfirmation(ResendConfirmationRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Invalid request");
+        }
+
+        var user = await _signInManager.UserManager.FindByEmailAsync(request.Email);
+
+        if (user is null)
+        {
+            return BadRequest("Invalid request");
+        }
+
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var confirmationUrl = Url.Action(
+            nameof(EmailConfirmed),
+            "Account",
+            new { email = user.Email, token },
+            protocol: Request.Scheme);
+
+        var emailMessage = new EmailMessage(request.Email, request.Email, "Email Confirmation", confirmationUrl);
+        var userAgent = _contextAccessor.HttpContext?.Request?.Headers?.UserAgent;
+        var agent = Parser.GetDefault().Parse(userAgent);
+        var userInfo = new UserInfo(agent.UA.ToString(), agent.OS.ToString());
+
+        _emailService.SendEmailConfirmation(emailMessage, userInfo);
+
+        return View();
     }
 
     [HttpPost]
@@ -110,11 +161,6 @@ public class AccountController : Controller
         await _signInManager.SignOutAsync();
 
         return RedirectToAction(nameof(Login));
-    }
-
-    public IActionResult ConfirmEmail()
-    {
-        return View();
     }
 
     public async Task<IActionResult> EmailConfirmed(string email, string token)
@@ -132,8 +178,17 @@ public class AccountController : Controller
         if (!result.Succeeded)
         {
             ViewData["ErrorMessage"] = "The email confirmation link is invalid or expired. Please request a new confirmation email.";
-            return View();
+            ViewBag.Email = email;
+            return View(new ResendConfirmationRequest(email));
         }
+
+        var actionUrl = Url.Action(
+                nameof(Login),
+                "Account",
+                new { email = user.Email, token },
+                protocol: Request.Scheme);
+        var emailMessage = new EmailMessage(email, email, "Welcome!", actionUrl);
+        _emailService.SendWelcome(emailMessage);
 
         return View();
     }
@@ -144,9 +199,9 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ForgotPassword(string email)
+    public async Task<IActionResult> ForgotPassword(Application.Requests.Auth.ForgotPasswordRequest request)
     {
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await _userManager.FindByEmailAsync(request.Email);
 
         if (user is null)
         {
@@ -156,24 +211,28 @@ public class AccountController : Controller
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
         var confirmationUrl = Url.Action(
-            nameof(ResetPassword),
+            nameof(PasswordReset),
             "Account",
             new { email = user.Email, token },
             protocol: Request.Scheme);
 
-        _emailService.SendResetPassword(
-            user.Email,
-            confirmationUrl);
+        var emailMessage = new EmailMessage(request.Email, request.Email, "Password reset", confirmationUrl);
+        var userAgent = _contextAccessor.HttpContext?.Request?.Headers?.UserAgent;
+        var agent = Parser.GetDefault().Parse(userAgent);
+        var userInfo = new UserInfo(agent.UA.ToString(), agent.OS.ToString());
 
-        return RedirectToAction(nameof(ResetSent));
+        _emailService.SendResetPassword(emailMessage, userInfo);
+
+
+        return RedirectToAction(nameof(PasswordResetConfirmation));
     }
 
-    public IActionResult ResetSent()
+    public IActionResult PasswordResetConfirmation()
     {
         return View();
     }
 
-    public IActionResult ResetPassword(string email, string token)
+    public IActionResult PasswordReset(string email, string token)
     {
         var request = new Application.Requests.Auth.ResetPasswordRequest(email, null, null, token);
 
@@ -181,13 +240,19 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ResetPassword([FromForm] Application.Requests.Auth.ResetPasswordRequest request)
+    public async Task<IActionResult> PasswordReset([FromForm] Application.Requests.Auth.ResetPasswordRequest request)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
         if (user is null)
         {
             return BadRequest("Invalid request");
+        }
+
+        if (!user.EmailConfirmed)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            await _userManager.ConfirmEmailAsync(user, token);
         }
 
         var result = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
