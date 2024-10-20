@@ -79,6 +79,7 @@ public class EmailService : IEmailService
                        .Replace("{{user_name}}", emailMessage.Username)
                        .Replace("{{user_email}}", emailMessage.Username)
                        .Replace("{{action_url}}", emailMessage.FallbackUrl)
+                       .Replace("https://localhost:7251", "https://l123cmn0-7251.euw.devtunnels.ms")
                        .Replace("{{trial_start_date}}", DateTime.Now.ToString("dd MMMM, yyyy"))
                        .Replace("{{trial_end_date}}", DateTime.Now.AddMonths(1).ToString("dd MMMM, yyyy"))
                        .Replace("{{trial_length}}", "30");

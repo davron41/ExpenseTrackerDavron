@@ -10,7 +10,7 @@
             <h4 class="text-center mb-5">Share @ViewBag.WalletName</h4>
             <form asp-action="Share" method="post">
                 <ejs-numerictextbox id="wallet-id" ejs-for="WalletId" allowObjectBinding="true" type="hidden"></ejs-numerictextbox>
-                <input type="hidden" id="users-list-input" name="UsersToShare" />
+                <input type="hidden" id="users-list-input" asp-for="@Model.UsersToShareJson" />
                 <div class="d-flex justify-content-between">
                     <div class="mb-3">
                         <ejs-textbox id="user-email"
@@ -26,11 +26,10 @@
                                     type="button"
                                     onclick="onAddUser()"></ejs-button>
                     </div>
-
                 </div>
                 <div class="my-5" style="height: 200px; overflow-y: scroll;">
                     <h5 class="text-center">Selected users</h5>
-                    <ejs-listview id="users-list" dataSource="@Model.UsersToShare">
+                    <ejs-listview id="users-list">
                         <e-listview-fieldsettings text="Text" id="Id">
                         </e-listview-fieldsettings>
                     </ejs-listview>
@@ -40,8 +39,6 @@
                 </div>
             </form>
         </div>
-
-
     </div>
     <div class="col-md-5">
         <div class="widget h-100 d-flex justify-content-center align-items-center">
@@ -72,14 +69,12 @@
         }
 
         const data = {
-            Id: (Math.random() * 1000).toFixed(0).toString(),
             Text: user,
         };
-        usersList.addItem([data]);
+        usersList.addItem([user]);
         const json = JSON.stringify([...usersList.dataSource]);
         usersListInput.value = json;
-        console.log(json);
 
-        console.log(usersListInput)
+        console.log(json);
     }
 </script>

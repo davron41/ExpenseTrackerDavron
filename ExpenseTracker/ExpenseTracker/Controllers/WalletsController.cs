@@ -2,6 +2,7 @@
 using ExpenseTracker.Application.Requests.WalletShare;
 using ExpenseTracker.Application.Stores.Interfaces;
 using ExpenseTracker.Application.ViewModels.Wallet;
+using ExpenseTracker.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseTracker.Controllers;
@@ -90,7 +91,7 @@ public class WalletsController : Controller
 
     public IActionResult Share([FromRoute] WalletRequest request)
     {
-        var shareRequest = new CreateWalletShareRequest(request.UserId, request.Id, []);
+        var shareRequest = new CreateWalletShareRequest(request.UserId, request.Id, string.Empty, []);
 
         return View(shareRequest);
     }

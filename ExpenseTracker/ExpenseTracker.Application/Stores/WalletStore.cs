@@ -1,4 +1,5 @@
-﻿using ExpenseTracker.Application.Mappings;
+﻿using ExpenseTracker.Application.Hubs;
+using ExpenseTracker.Application.Mappings;
 using ExpenseTracker.Application.Models;
 using ExpenseTracker.Application.Requests.Common;
 using ExpenseTracker.Application.Requests.Wallet;
@@ -10,6 +11,7 @@ using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Enums;
 using ExpenseTracker.Domain.Exceptions;
 using ExpenseTracker.Domain.Interfaces;
+using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace ExpenseTracker.Application.Stores;
@@ -18,11 +20,13 @@ internal sealed class WalletStore : IWalletStore
 {
     private readonly ICommonRepository _repository;
     private readonly IEmailService _emailService;
+    private readonly NotificationHub _notificationHub;
 
-    public WalletStore(ICommonRepository repository, IEmailService emailService)
+    public WalletStore(ICommonRepository repository, IEmailService emailService, NotificationHub notificationHub)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
+        _notificationHub = notificationHub ?? throw new ArgumentNullException(nameof(notificationHub));
     }
 
     public List<WalletViewModel> GetAll(GetWalletsRequest request)
@@ -106,14 +110,15 @@ internal sealed class WalletStore : IWalletStore
         ArgumentNullException.ThrowIfNull(request);
 
         var wallet = GetAndValidateWallet(request);
+        Task.Run(async () => await _notificationHub.SendMessageAsync(new WalletShareNotification(wallet.Owner.UserName, wallet.Name)));
 
         foreach (var userEmail in request.UsersToShare)
         {
-            var user = _repository.Users.GetByEmail(userEmail.Text);
+            var user = _repository.Users.GetByEmail(userEmail);
 
             if (user is null)
             {
-                var message = new EmailMessage(userEmail.Text, "there", "Collaboration Invitation", null);
+                var message = new EmailMessage(userEmail, "there", "Collaboration Invitation", null);
                 _emailService.SendWalletInvitation(message);
             }
             else
@@ -132,6 +137,8 @@ internal sealed class WalletStore : IWalletStore
         }
 
         _repository.SaveChanges();
+
+        
     }
 
     private static CreateWalletRequest GetDefaultWallet(Guid userId) => new(
@@ -151,6 +158,7 @@ internal sealed class WalletStore : IWalletStore
     private Wallet GetAndValidateWallet(CreateWalletShareRequest request)
     {
         var wallet = _repository.Wallets.GetById(request.WalletId);
+        wallet.Owner = _repository.Users.GetById(wallet.OwnerId);
 
         if (wallet is null)
         {
