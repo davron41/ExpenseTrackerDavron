@@ -5,6 +5,14 @@ using ExpenseTracker.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
+
 builder.Services.ConfigureServices(builder.Configuration);
 
 builder.Services.AddControllersWithViews();
@@ -20,13 +28,14 @@ else
     app.UseDeveloperExceptionPage();
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<ExpenseTrackerDbContext>();
-    //DatabaseInitializer.SeedDatabase(context);
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors("AllowAllOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();
