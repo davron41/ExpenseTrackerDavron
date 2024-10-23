@@ -7,4 +7,4 @@ public record CreateWalletRequest(
     string Name, 
     string? Description, 
     decimal Balance) 
-    : UserRequest(UserId: UserId);
+    : UserRequestId(UserId: UserId);
