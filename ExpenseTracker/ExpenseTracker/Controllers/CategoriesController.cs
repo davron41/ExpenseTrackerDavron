@@ -1,6 +1,6 @@
 ﻿using ExpenseTracker.Application.Requests.Category;
+using ExpenseTracker.Application.Stores.Interfaces;
 using ExpenseTracker.Application.ViewModels.Category;
-using ExpenseTracker.Stores.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseTracker.Controllers;
