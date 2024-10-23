@@ -1,3 +1,3 @@
 ﻿namespace ExpenseTracker.Application.Requests.Common;
 
-public record UserRequest(Guid UserId);
+public record UserRequestId(Guid UserId);

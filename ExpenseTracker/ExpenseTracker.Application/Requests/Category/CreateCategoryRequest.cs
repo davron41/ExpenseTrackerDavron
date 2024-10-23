@@ -8,4 +8,4 @@ public record CreateCategoryRequest(
     string Name,
     string? Description,
     CategoryType Type)
-    : UserRequest(UserId: UserId);
+    : UserRequestId(UserId: UserId);
