@@ -34,7 +34,7 @@ internal sealed class WalletRepository : RepositoryBase<Wallet>, IWalletReposito
 
         if (!string.IsNullOrEmpty(search))
         {
-            query = query.Where(x => x.Name.Contains(search) || 
+            query = query.Where(x => x.Name.Contains(search) ||
                 (x.Description != null && x.Description.Contains(search)));
         }
 
@@ -49,8 +49,8 @@ internal sealed class WalletRepository : RepositoryBase<Wallet>, IWalletReposito
             .AsNoTracking()
             .Include(x => x.Owner)
             .Include(x => x.Shares)
-            .FirstOrDefault(x => 
-                (x.Id == id && x.OwnerId == userId) || 
+            .FirstOrDefault(x =>
+                (x.Id == id && x.OwnerId == userId) ||
                 x.Shares.Any(share => share.UserId == userId && share.IsAccepted));
 
         if (wallet is null)

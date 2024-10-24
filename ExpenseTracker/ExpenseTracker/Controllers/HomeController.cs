@@ -1,5 +1,4 @@
 using ExpenseTracker.Domain.Enums;
-using ExpenseTracker.Infrastructure;
 using ExpenseTracker.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

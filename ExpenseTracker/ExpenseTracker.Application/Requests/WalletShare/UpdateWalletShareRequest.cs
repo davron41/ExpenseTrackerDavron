@@ -1,6 +1,4 @@
-﻿using ExpenseTracker.Domain.Enums;
-
-namespace ExpenseTracker.Application.Requests.WalletShare;
+﻿namespace ExpenseTracker.Application.Requests.WalletShare;
 
 internal sealed record UpdateWalletShareRequest(
     Guid UserId,

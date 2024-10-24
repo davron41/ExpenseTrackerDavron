@@ -43,8 +43,11 @@
     </div>
 </div>
 
-@await Html.PartialAsync("Modals/Edit", Model.FirstOrDefault())
-@await Html.PartialAsync("Modals/Delete", Model.FirstOrDefault())
+@if(Model!=null && Model.Any())
+{
+    @await Html.PartialAsync("Modals/Edit")
+}
+@await Html.PartialAsync("Modals/Delete")
 @await Html.PartialAsync("Modals/Create")
 
 
