@@ -14,6 +14,7 @@ public class ExpenseTrackerDbContext : IdentityDbContext<IdentityUser<Guid>, Ide
     public virtual DbSet<ImageFile> ImageFiles { get; set; }
     public virtual DbSet<Wallet> Wallets { get; set; }
     public virtual DbSet<WalletShare> WalletShares { get; set; }
+    public virtual DbSet<Notification> Notifications { get; set; }
 
     public ExpenseTrackerDbContext(DbContextOptions<ExpenseTrackerDbContext> options)
         : base(options)

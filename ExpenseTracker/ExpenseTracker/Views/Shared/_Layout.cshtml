@@ -51,11 +51,11 @@
                             <e-combobox-fields value="Id" text="Name"></e-combobox-fields>
                         </ejs-combobox>
                     }
-                    <div style="position:relative;display:inline-block;margin:20px 20px 10px 20px;">
+                    <div style="position:relative;display:inline-block;margin:20px 20px 10px 20px;" id="notificationIcon">
                         <i class="fa-solid fa-bell"></i>
                         <span class="e-badge e-badge-danger e-badge-overlap e-badge-notification">8</span>
                     </div>
-                    <div style="position:relative;display:inline-block;margin:20px 20px 10px 0px;">
+                    <div style="position:relative;display:inline-block;margin:20px 20px 10px 0px;" >
                         <i class="fa-solid fa-message"></i>
                         <span class="e-badge e-badge-danger e-badge-overlap e-badge-notification">4</span>
                     </div>
@@ -87,3 +87,9 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<script>
+    document.getElementById('notificationIcon').addEventListener('click', function () {
+        window.location.href = '@Url.Action("Index", "Notification")';
+    });
+</script>

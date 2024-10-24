@@ -1,4 +1,4 @@
-﻿using ExpenseTracker.Application.Requests.Common;
+using ExpenseTracker.Application.Requests.Common;
 
 namespace ExpenseTracker.Application.Requests.Wallet;
 

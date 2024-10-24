@@ -1,4 +1,4 @@
-﻿using ExpenseTracker.Application.Requests.Category;
+using ExpenseTracker.Application.Requests.Category;
 using ExpenseTracker.Application.Requests.Common;
 using ExpenseTracker.Application.Requests.Transfer;
 using ExpenseTracker.Application.Requests.Wallet;
@@ -24,7 +24,7 @@ public class TransfersController : Controller
     private readonly ICategoryStore _categoryStore;
     private readonly IWalletStore _walletStore;
 
-    public TransfersController(ITransferStore store, ICategoryStore categoryStore,IWalletStore walletStore)
+    public TransfersController(ITransferStore store, ICategoryStore categoryStore, IWalletStore walletStore)
     {
         _transferStore = store ?? throw new ArgumentNullException(nameof(store));
         _categoryStore = categoryStore ?? throw new ArgumentNullException(nameof(categoryStore));
@@ -35,7 +35,7 @@ public class TransfersController : Controller
     {
         var transfers = _transferStore.GetAll(request);
         var categories = _categoryStore.GetAll(new GetCategoriesRequest(request.UserId, null));
-        var wallets = _walletStore.GetAll(new GetWalletsRequest(request.UserId,null));
+        var wallets = _walletStore.GetAll(new GetWalletsRequest(request.UserId, null));
 
 
         ViewBag.Search = request.Search;
@@ -97,7 +97,7 @@ public class TransfersController : Controller
         var transfer = _transferStore.GetById(request);
 
         PopulateViewBag(request, transfer.Category.Id);
-        
+
         return View(transfer);
     }
 
