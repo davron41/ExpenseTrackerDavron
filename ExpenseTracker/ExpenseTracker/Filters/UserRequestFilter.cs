@@ -10,7 +10,7 @@ public class UserRequestFilter : IActionFilter
     {
         foreach (var arg in context.ActionArguments)
         {
-            if (arg.Value is UserRequest userRequest)
+            if (arg.Value is UserRequestId userRequest)
             {
                 var user = context.HttpContext.User;
                 var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;

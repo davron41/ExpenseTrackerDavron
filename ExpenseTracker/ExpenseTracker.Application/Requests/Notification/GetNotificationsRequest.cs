@@ -3,4 +3,4 @@
 namespace ExpenseTracker.Application.Requests.Notification;
 
 public sealed record GetNotificationsRequest(Guid UserId)
-    : UserRequest(UserId: UserId);
+    : UserRequestId(UserId: UserId);

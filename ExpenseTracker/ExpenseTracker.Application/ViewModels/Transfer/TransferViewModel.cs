@@ -1,5 +1,4 @@
-﻿
-using ExpenseTracker.Application.ViewModels.Category;
+﻿using ExpenseTracker.Application.ViewModels.Category;
 using ExpenseTracker.Application.ViewModels.Wallet;
 
 namespace ExpenseTracker.Application.ViewModels.Transfer;

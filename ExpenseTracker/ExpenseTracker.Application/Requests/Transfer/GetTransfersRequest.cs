@@ -9,4 +9,4 @@ public sealed record GetTransfersRequest(
     string? Search,
     decimal MaxAmount,
     decimal? MinAmount)
-    : UserRequest(UserId: UserId);
+    : UserRequestId(UserId: UserId);

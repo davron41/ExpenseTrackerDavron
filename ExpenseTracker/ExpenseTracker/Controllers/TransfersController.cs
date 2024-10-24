@@ -1,4 +1,4 @@
-﻿using ExpenseTracker.Application.Requests.Category;
+using ExpenseTracker.Application.Requests.Category;
 using ExpenseTracker.Application.Requests.Common;
 using ExpenseTracker.Application.Requests.Transfer;
 using ExpenseTracker.Application.Requests.Wallet;
@@ -52,7 +52,7 @@ public class TransfersController : Controller
         return View(transfer);
     }
 
-    public IActionResult Create([FromHeader] UserRequest request)
+    public IActionResult Create([FromHeader] UserRequestId request)
     {
         PopulateViewBag(request);
 
@@ -180,7 +180,7 @@ public class TransfersController : Controller
         return true;
     }
 
-    private void PopulateViewBag(UserRequest request, int? categoryId = null, int? walletId = null)
+    private void PopulateViewBag(UserRequestId request, int? categoryId = null, int? walletId = null)
     {
         var categories = _categoryStore.GetAll(new GetCategoriesRequest(request.UserId, null));
         var wallets = _walletStore.GetAll(new GetWalletsRequest(request.UserId, null));
