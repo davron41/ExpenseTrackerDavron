@@ -2,7 +2,6 @@
 using ExpenseTracker.Application.Requests.WalletShare;
 using ExpenseTracker.Application.Stores.Interfaces;
 using ExpenseTracker.Application.ViewModels.Wallet;
-using ExpenseTracker.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpenseTracker.Controllers;

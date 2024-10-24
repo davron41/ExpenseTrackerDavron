@@ -2,6 +2,7 @@
 using ExpenseTracker.Application.Services.Interfaces;
 using ExpenseTracker.Infrastructure.Configurations;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
@@ -11,10 +12,12 @@ namespace ExpenseTracker.Infrastructure.Email;
 public class EmailService : IEmailService
 {
     private readonly EmailOptions _options;
+    private readonly IWebHostEnvironment _env;
 
-    public EmailService(IOptionsMonitor<EmailOptions> options)
+    public EmailService(IOptionsMonitor<EmailOptions> options, IWebHostEnvironment webHostEnvironment)
     {
         _options = options.CurrentValue;
+        _env = webHostEnvironment;
     }
 
     public void SendWelcome(EmailMessage message)
@@ -73,13 +76,14 @@ public class EmailService : IEmailService
         }
     }
 
-    private static MimeMessage CreateEmailMessage(EmailMessage emailMessage, string templateName, UserInfo? userInfo = null)
+    private MimeMessage CreateEmailMessage(EmailMessage emailMessage, string templateName, UserInfo? userInfo = null)
     {
-        var body = File.ReadAllText($"C:\\Users\\DAVRON 41\\Desktop\\CountriesAPI\\USTOZ\\ExpenseTrackerDavron\\ExpenseTracker\\ExpenseTracker.Infrastructure\\Email\\Templates\\{templateName}.html")
+        //string templatePath = Path.Combine(_env.ContentRootPath, "Email", "Templates", $"{templateName}.html");
+        var templatePath = Path.Combine(AppContext.BaseDirectory, "Email/Templates", templateName);
+        var body = File.ReadAllText(templatePath)
                        .Replace("{{user_name}}", emailMessage.Username)
                        .Replace("{{user_email}}", emailMessage.Username)
                        .Replace("{{action_url}}", emailMessage.FallbackUrl)
-                       .Replace("https://localhost:7251", "https://l123cmn0-7251.euw.devtunnels.ms")
                        .Replace("{{trial_start_date}}", DateTime.Now.ToString("dd MMMM, yyyy"))
                        .Replace("{{trial_end_date}}", DateTime.Now.AddMonths(1).ToString("dd MMMM, yyyy"))
                        .Replace("{{trial_length}}", "30");

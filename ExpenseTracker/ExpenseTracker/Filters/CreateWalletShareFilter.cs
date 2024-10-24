@@ -1,5 +1,4 @@
 ﻿using ExpenseTracker.Application.Requests.WalletShare;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Newtonsoft.Json;

@@ -1,5 +1,4 @@
-﻿using ExpenseTracker.Application.Requests.Common;
-using ExpenseTracker.Application.Requests.Wallet;
+﻿using ExpenseTracker.Application.Requests.Wallet;
 using ExpenseTracker.Application.Requests.WalletShare;
 using ExpenseTracker.Application.ViewModels.Wallet;
 
