@@ -43,11 +43,13 @@
     </div>
 </div>
 
-@await Html.PartialAsync("Modals/Edit", Model.FirstOrDefault())
+@if (Model != null && Model.Any())
+{
+    @await Html.PartialAsync("Modals/Edit", Model.FirstOrDefault())
+}
+    
 @await Html.PartialAsync("Modals/Delete", Model.FirstOrDefault())
 @await Html.PartialAsync("Modals/Create")
-
-
 
 <script id="typeColumnTemplate" type="text/x-template">
     ${if(Type == 0)}
@@ -96,7 +98,7 @@
     }
     
 </script>
-
+ 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"> </script>
 
