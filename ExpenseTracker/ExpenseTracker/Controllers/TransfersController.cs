@@ -4,7 +4,6 @@ using ExpenseTracker.Application.Requests.Transfer;
 using ExpenseTracker.Application.Requests.Wallet;
 using ExpenseTracker.Application.Stores.Interfaces;
 using ExpenseTracker.Application.ViewModels.Transfer;
-using ExpenseTracker.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 

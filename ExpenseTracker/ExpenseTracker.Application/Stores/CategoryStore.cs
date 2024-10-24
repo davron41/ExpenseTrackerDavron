@@ -1,11 +1,10 @@
-using ExpenseTracker.Application.Mappings;
+﻿using ExpenseTracker.Application.Mappings;
 using ExpenseTracker.Application.Requests.Category;
 using ExpenseTracker.Application.Services.Interfaces;
 using ExpenseTracker.Application.Stores.Interfaces;
 using ExpenseTracker.Application.ViewModels.Category;
 using ExpenseTracker.Domain.Exceptions;
 using ExpenseTracker.Domain.Interfaces;
-using ExpenseTracker.Mappings;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Application.Stores;

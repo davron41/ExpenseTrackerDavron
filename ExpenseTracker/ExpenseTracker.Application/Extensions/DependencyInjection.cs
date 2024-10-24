@@ -3,7 +3,6 @@ using ExpenseTracker.Application.Services;
 using ExpenseTracker.Application.Services.Interfaces;
 using ExpenseTracker.Application.Stores;
 using ExpenseTracker.Application.Stores.Interfaces;
-using ExpenseTracker.Stores;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

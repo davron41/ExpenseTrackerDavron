@@ -1,12 +1,10 @@
-using ExpenseTracker.Application.Mappings;
-using ExpenseTracker.Application.Requests.Transfer;
+﻿using ExpenseTracker.Application.Mappings;
 using ExpenseTracker.Application.Requests.Transfer;
 using ExpenseTracker.Application.Stores.Interfaces;
 using ExpenseTracker.Application.ViewModels.Transfer;
 using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Exceptions;
 using ExpenseTracker.Domain.Interfaces;
-using ExpenseTracker.Mappings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
