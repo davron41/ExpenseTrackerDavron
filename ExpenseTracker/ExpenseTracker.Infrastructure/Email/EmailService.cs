@@ -1,9 +1,9 @@
-﻿using ExpenseTracker.Application.Services.Interfaces;
+﻿using ExpenseTracker.Application.Models;
+using ExpenseTracker.Application.Services.Interfaces;
 using ExpenseTracker.Infrastructure.Configurations;
 using MailKit.Net.Smtp;
-using MailKit.Security;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using MimeKit;
 using MimeKit.Text;
 
@@ -12,68 +12,47 @@ namespace ExpenseTracker.Infrastructure.Email;
 public class EmailService : IEmailService
 {
     private readonly EmailOptions _options;
+    private readonly IWebHostEnvironment _env;
 
-    public EmailService(IOptionsMonitor<EmailOptions> options)
+    public EmailService(IOptionsMonitor<EmailOptions> options, IWebHostEnvironment webHostEnvironment)
     {
         _options = options.CurrentValue;
+        _env = webHostEnvironment;
     }
 
-    public void SendEmail(List<MailboxAddress> to, string subject, string content)
+    public void SendWelcome(EmailMessage message)
     {
-
-        var emailMessage = CreateEmailMessage(to, subject, content);
+        var emailMessage = CreateEmailMessage(message, "Welcome");
 
         Send(emailMessage);
     }
 
-    public void SendConfirmation(string userName, string fallbackUrl)
+    public void SendInvitation(EmailMessage message)
     {
-        var emailMessage = CreateEmailMessage(userName, fallbackUrl);
+        var emailMessage = CreateEmailMessage(message, "Invitation");
 
         Send(emailMessage);
     }
 
-    public void SendResetPassword(string username, string fallbackUrl)
+    public void SendWalletInvitation(EmailMessage message)
     {
-        var subject = "Confirm Your Email for Expense Tracker Manager";
-        var body = File.ReadAllText("C:\\Users\\DAVRON 41\\Desktop\\CountriesAPI\\USTOZ\\ExpenseTrackerDavron\\ExpenseTracker\\ExpenseTracker.Infrastructure\\Email\\Templates\\ResetPassword.html")
-                       .Replace("[UserName]", username)
-                       .Replace("[FallbackUrl]", fallbackUrl);
+        var emailMessage = CreateEmailMessage(message, "Invitation");
 
-        var message = new MimeMessage();
-        message.From.Add(new MailboxAddress("Expense Tracker Manager", "noreply@expense-manager.uz"));
-        message.To.Add(new MailboxAddress(username, username));
-        message.Subject = subject;
-        message.Body = new TextPart(TextFormat.Html) { Text = body };
-
-        Send(message);
+        Send(emailMessage);
     }
 
-    private MimeMessage CreateEmailMessage(List<MailboxAddress> to, string subject, string content)
+    public void SendEmailConfirmation(EmailMessage message, UserInfo userInfo)
     {
-        var emailMessage = new MimeMessage();
-        emailMessage.From.Add(new MailboxAddress("Expense Tracker", _options.From));
-        emailMessage.To.AddRange(to);
-        emailMessage.Subject = subject;
-        emailMessage.Body = new TextPart(TextFormat.Text) { Text = content };
+        var emailMessage = CreateEmailMessage(message, "EmailConfirmation", userInfo);
 
-        return emailMessage;
+        Send(emailMessage);
     }
 
-    private MimeMessage CreateEmailMessage(string userName, string fallbackUrl)
+    public void SendResetPassword(EmailMessage message, UserInfo userInfo)
     {
-        var subject = "Confirm Your Email for Expense Tracker Manager";
-        var body = File.ReadAllText("C:\\Users\\DAVRON 41\\Desktop\\CountriesAPI\\USTOZ\\ExpenseTrackerDavron\\ExpenseTracker\\ExpenseTracker.Infrastructure\\Email\\Templates\\EmailConfirmation.html")
-                       .Replace("[UserName]", userName)
-                       .Replace("[ConfirmationLink]", fallbackUrl);
+        var emailMessage = CreateEmailMessage(message, "ResetPassword", userInfo);
 
-        var message = new MimeMessage();
-        message.From.Add(new MailboxAddress("Expense Tracker Manager", "noreply@expense-manager.uz"));
-        message.To.Add(new MailboxAddress(userName, userName));
-        message.Subject = subject;
-        message.Body = new TextPart(TextFormat.Html) { Text = body };
-
-        return message;
+        Send(emailMessage);
     }
 
     private void Send(MimeMessage mailMessage)
@@ -95,5 +74,32 @@ public class EmailService : IEmailService
         {
             client.Disconnect(true);
         }
+    }
+
+    private MimeMessage CreateEmailMessage(EmailMessage emailMessage, string templateName, UserInfo? userInfo = null)
+    {
+        //string templatePath = Path.Combine(_env.ContentRootPath, "Email", "Templates", $"{templateName}.html");
+        var templatePath = Path.Combine(AppContext.BaseDirectory, "Email/Templates", templateName);
+        var body = File.ReadAllText(templatePath)
+                       .Replace("{{user_name}}", emailMessage.Username)
+                       .Replace("{{user_email}}", emailMessage.Username)
+                       .Replace("{{action_url}}", emailMessage.FallbackUrl)
+                       .Replace("{{trial_start_date}}", DateTime.Now.ToString("dd MMMM, yyyy"))
+                       .Replace("{{trial_end_date}}", DateTime.Now.AddMonths(1).ToString("dd MMMM, yyyy"))
+                       .Replace("{{trial_length}}", "30");
+
+        if (userInfo is not null)
+        {
+            body = body.Replace("{{operating_system}}", userInfo.OS)
+                       .Replace("{{browser_name}}", userInfo.Browser);
+        }
+
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress("Expense Tracker Manager", "noreply@expense-manager.uz"));
+        message.To.Add(new MailboxAddress(emailMessage.Username, emailMessage.To));
+        message.Subject = emailMessage.Subject;
+        message.Body = new TextPart(TextFormat.Html) { Text = body };
+
+        return message;
     }
 }

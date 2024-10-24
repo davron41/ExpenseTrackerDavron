@@ -1,10 +1,10 @@
 ﻿using ExpenseTracker.Application.Requests.Category;
 using ExpenseTracker.Application.Services.Interfaces;
+using ExpenseTracker.Application.Stores.Interfaces;
 using ExpenseTracker.Application.ViewModels.Category;
 using ExpenseTracker.Domain.Exceptions;
 using ExpenseTracker.Domain.Interfaces;
 using ExpenseTracker.Mappings;
-using ExpenseTracker.Stores.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Stores;
@@ -61,7 +61,7 @@ public class CategoryStore : ICategoryStore
             _repository.Categories.Update(entity);
             _repository.SaveChanges();
         }
-        catch(DbUpdateConcurrencyException)
+        catch (DbUpdateConcurrencyException)
         {
             if (!_repository.Categories.Exists(request.Id))
             {

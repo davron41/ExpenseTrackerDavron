@@ -8,6 +8,7 @@ public interface ICommonRepository
     IWalletRepository Wallets { get; }
     IWalletShareRepository WalletShares { get; }
     IUserRepository Users { get; }
+    INotificationRepository Notifications { get; }
 
     public int SaveChanges();
 }

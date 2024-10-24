@@ -2,7 +2,7 @@
 using ExpenseTracker.Application.ViewModels.Transfer;
 using Microsoft.AspNetCore.Http;
 
-namespace ExpenseTracker.Stores.Interfaces;
+namespace ExpenseTracker.Application.Stores.Interfaces;
 
 public interface ITransferStore
 {
