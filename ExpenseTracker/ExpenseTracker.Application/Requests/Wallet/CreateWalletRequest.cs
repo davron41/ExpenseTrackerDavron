@@ -1,10 +1,14 @@
 ﻿using ExpenseTracker.Application.Requests.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace ExpenseTracker.Application.Requests.Wallet;
 
 public record CreateWalletRequest(
     Guid UserId,
-    string Name,
+    [Required(ErrorMessage = "Name is required")]
+    string Name, 
     string? Description,
-    decimal Balance)
+    [Required(ErrorMessage = "Balance entry is mandatory")]
+    decimal Balance) 
+
     : UserRequest(UserId: UserId);

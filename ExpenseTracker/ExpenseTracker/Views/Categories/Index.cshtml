@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ExpenseTracker.Application.ViewModels.Category.CategoryViewModel>
+@model IEnumerable<ExpenseTracker.Application.ViewModels.Category.CategoryViewModel>
 
 @{
     ViewData["PageTitle"] = "Categories";
@@ -43,14 +43,13 @@
     </div>
 </div>
 
-@if(Model!=null && Model.Any())
+@if (Model != null && Model.Any())
 {
-    @await Html.PartialAsync("Modals/Edit")
+    @await Html.PartialAsync("Modals/Edit", Model.FirstOrDefault())
 }
+
 @await Html.PartialAsync("Modals/Delete")
 @await Html.PartialAsync("Modals/Create")
-
-
 
 <script id="typeColumnTemplate" type="text/x-template">
     ${if(Type == 0)}
@@ -99,7 +98,7 @@
     }
     
 </script>
-
+ 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"> </script>
 
