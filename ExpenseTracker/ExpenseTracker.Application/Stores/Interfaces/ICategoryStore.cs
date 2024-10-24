@@ -1,7 +1,7 @@
 ﻿using ExpenseTracker.Application.Requests.Category;
 using ExpenseTracker.Application.ViewModels.Category;
 
-namespace ExpenseTracker.Stores.Interfaces;
+namespace ExpenseTracker.Application.Stores.Interfaces;
 
 public interface ICategoryStore
 {

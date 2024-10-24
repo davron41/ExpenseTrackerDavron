@@ -2,5 +2,5 @@
 
 namespace ExpenseTracker.Application.Requests.Wallet;
 
-public sealed record WalletRequest(Guid UserId, int Id) 
+public sealed record WalletRequest(Guid UserId, int Id)
     : UserRequest(UserId: UserId);

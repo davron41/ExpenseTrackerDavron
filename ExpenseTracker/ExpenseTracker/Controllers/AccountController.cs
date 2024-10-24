@@ -5,8 +5,6 @@ using ExpenseTracker.Application.Stores.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using MimeKit;
 using UAParser;
 
 namespace ExpenseTracker.Controllers;
@@ -90,12 +88,12 @@ public class AccountController : Controller
             _walletStore.CreateDefault(user.Id);
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var confirmationUrl = Url.Action(
-                nameof(EmailConfirmed),           
-                "Account",                
+                nameof(EmailConfirmed),
+                "Account",
                 new { email = user.Email, token },
                 protocol: Request.Scheme);
-            
-            var emailMessage = new EmailMessage(request.Email, request.Email, "Email Confirmation", confirmationUrl);
+
+            var emailMessage = new EmailMessage(request.Email, request.UserName, "Email Confirmation", confirmationUrl);
             var userAgent = _contextAccessor.HttpContext?.Request?.Headers?.UserAgent;
             var agent = Parser.GetDefault().Parse(userAgent);
             var userInfo = new UserInfo(agent.UA.ToString(), agent.OS.ToString());
@@ -221,7 +219,6 @@ public class AccountController : Controller
 
         _emailService.SendResetPassword(emailMessage, userInfo);
 
-
         return RedirectToAction(nameof(PasswordResetConfirmation));
     }
 
@@ -232,7 +229,7 @@ public class AccountController : Controller
 
     public IActionResult PasswordReset(string email, string token)
     {
-        var request = new ResetPasswordRequest(email, null, null, token);
+        var request = new Application.Requests.Auth.ResetPasswordRequest(email, null, null, token);
 
         return View(request);
     }

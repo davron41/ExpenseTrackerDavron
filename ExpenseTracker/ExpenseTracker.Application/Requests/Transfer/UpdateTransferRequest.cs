@@ -11,7 +11,7 @@ public sealed record UpdateTransferRequest(
     : CreateTransferRequest(
         UserId: UserId,
         CategoryId: CategoryId,
-        WalletId:WalletId,
+        WalletId: WalletId,
         Notes: Notes,
         Amount: Amount,
         Date: Date);

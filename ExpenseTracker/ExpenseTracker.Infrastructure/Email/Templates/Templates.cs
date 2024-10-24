@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ExpenseTracker.Infrastructure.Email.Templates;
+﻿namespace ExpenseTracker.Infrastructure.Email.Templates;
 
 internal static class Templates
 {

@@ -1,7 +1,6 @@
 ﻿using ExpenseTracker.Application.Hubs;
 using ExpenseTracker.Application.Mappings;
 using ExpenseTracker.Application.Models;
-using ExpenseTracker.Application.Requests.Common;
 using ExpenseTracker.Application.Requests.Wallet;
 using ExpenseTracker.Application.Requests.WalletShare;
 using ExpenseTracker.Application.Services.Interfaces;
@@ -11,8 +10,6 @@ using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Enums;
 using ExpenseTracker.Domain.Exceptions;
 using ExpenseTracker.Domain.Interfaces;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace ExpenseTracker.Application.Stores;
 
@@ -138,7 +135,7 @@ internal sealed class WalletStore : IWalletStore
 
         _repository.SaveChanges();
 
-        
+
     }
 
     private static CreateWalletRequest GetDefaultWallet(Guid userId) => new(

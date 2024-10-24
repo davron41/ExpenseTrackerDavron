@@ -24,6 +24,9 @@ internal sealed class CommonRepository : ICommonRepository
 
     private readonly IUserRepository _users;
     public IUserRepository Users => _users;
+    
+    private readonly INotificationRepository _notifications;
+    public INotificationRepository Notifications=>_notifications;
 
     public CommonRepository(ExpenseTrackerDbContext context)
     {
@@ -35,6 +38,7 @@ internal sealed class CommonRepository : ICommonRepository
         _wallets = new WalletRepository(context);
         _walletShares = new WalletShareRepository(context);
         _users = new UserRepository(context);
+        _notifications = new NotificationRepository(context);
     }
 
     public int SaveChanges() => _context.SaveChanges();

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ExpenseTracker.Application.ViewModels.Category.CategoryViewModel>
+@model IEnumerable<ExpenseTracker.Application.ViewModels.Category.CategoryViewModel>
 
 @{
     ViewData["PageTitle"] = "Categories";
@@ -47,8 +47,8 @@
 {
     @await Html.PartialAsync("Modals/Edit", Model.FirstOrDefault())
 }
-    
-@await Html.PartialAsync("Modals/Delete", Model.FirstOrDefault())
+
+@await Html.PartialAsync("Modals/Delete")
 @await Html.PartialAsync("Modals/Create")
 
 <script id="typeColumnTemplate" type="text/x-template">
