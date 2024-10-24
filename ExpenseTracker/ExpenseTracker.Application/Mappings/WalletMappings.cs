@@ -25,8 +25,17 @@ public static class WalletMappings
         };
     }
 
-    public static Wallet ToEntity(this CreateWalletRequest request) => new()
+    public static Wallet ToUpdateEntity(this UpdateWalletRequest request) => new()
     {
+        Id = request.Id,
+        Name = request.Name,
+        Description = request.Description,
+        Balance = request.Balance,
+        Owner = null!,
+        OwnerId = request.UserId,
+    };
+    public static Wallet ToEntity(this CreateWalletRequest request) => new()
+    {        
         Name = request.Name,
         Description = request.Description,
         Balance = request.Balance,

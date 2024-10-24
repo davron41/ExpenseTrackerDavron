@@ -33,7 +33,7 @@ internal sealed class WalletStore : IWalletStore
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var wallets = _repository.Wallets.GetAll(request.UserId);
+        var wallets = _repository.Wallets.GetAll(request.UserId, request.Search);
 
         var viewModels = wallets
             .Select(x => x.ToViewModel())
@@ -81,7 +81,7 @@ internal sealed class WalletStore : IWalletStore
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var entity = request.ToEntity();
+        var entity = request.ToUpdateEntity();
 
         if (entity.IsMain)
         {
