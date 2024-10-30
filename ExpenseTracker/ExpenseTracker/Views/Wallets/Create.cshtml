@@ -3,7 +3,7 @@
 
 @{
     ViewData["PageTitle"] = "Create new Wallet";
-    Layout = null;
+    Layout = "~/Views/Shared/_ModalForLayout.cshtml";
 }
 
 <div class="widget p-5" style="background-color:#212b36">    
@@ -43,6 +43,11 @@
         user-select: none;
     }
 </style>
+
+@section scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
