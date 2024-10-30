@@ -15,7 +15,7 @@
 
 ## ⚙️ Technologies Used
 
-- **Frontend**: HTML, CSS, JavaScript (using frameworks/libraries as applicable)
+- **Frontend**: HTML, CSS, JavaScript
 - **Backend**: ASP.NET Core MVC
 - **Database**: Microsoft SQL Server (MS SQL)
 - **ORM**: Entity Framework Core
@@ -32,13 +32,20 @@ To set up the project locally, follow these steps:
    cd ExpenseTracker
 3. **Install the necessary dependencies:**
    ```bash
-   # Use the appropriate command for your backend
+   # Run this command inside the project folder:
+   dotnet restore
 4. **Set up the database:**
    ```bash
-   # Configure your MS SQL database by applying the provided migrations or running the setup scripts
+   # 1.Update the connection string in the appsettings.json file to connect to your MS SQL database:
+   "ConnectionStrings": {
+     "DefaultConnection": "Server=localhost;Database=ExpenseTrackerDB;User Id=sa;Password=YourPassword;TrustServerCertificate=True;"
+   }
+   
+   # 2.Then, apply migrations to create the database schema:
+   dotnet ef database update
 5. **Run the application:**
    ```bash
-   # Use the command to start your application
+   dotnet run
 ## 🛠️ Usage
 
 1. **Register or log in to your account.**
@@ -66,5 +73,3 @@ Contributions are welcome! If you would like to contribute to this project, plea
 
 ## 📝 License
 This project is licensed under the MIT License.
-  ```sql
-  Feel free to customize any part further, especially the emojis, to match your style and preferences!
