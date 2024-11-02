@@ -26,6 +26,7 @@ public class CategoryStore : ICategoryStore
         var entities = _repository.Categories.GetAll(request.Search, request.UserId);
         var viewModels = entities
             .Select(x => x.ToViewModel())
+            .OrderByDescending(x => x.Id)
             .ToList();
 
         return viewModels;

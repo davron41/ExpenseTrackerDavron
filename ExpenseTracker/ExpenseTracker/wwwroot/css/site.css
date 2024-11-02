@@ -253,7 +253,6 @@ img.profile-pic {
     background-color: rgb(34 43 51);
     color: #fff;
 }
-
 .e-btn-group.custom-rbt-group input:checked + label.e-btn-success {
     background-color: #198754;
     border: 1px solid #fff;
@@ -264,7 +263,7 @@ img.profile-pic {
     border: 1px solid #fff;
 }
 
-/*SideBar*/
+    /*SideBar*/
 #sidebar {
     background-color: #12161d;
     border-right: 1px dashed rgba(75,82,85,0.24);
@@ -512,7 +511,7 @@ input[type="file"] {
     width: 15px;
     height: 15px;
     color: white !important;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -522,6 +521,7 @@ input[type="file"] {
     top: 19px;
     right: 19px;
     border: none;
+    /*filter: invert(1)*/
 }
 
     .btn-close:hover {
@@ -774,3 +774,90 @@ select:hover {
         .confirmation-pending-container .btn-confirm:hover {
             background-color: #57c038;
         }
+
+/* Animation */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    20%, 60% {
+        transform: translateX(-10px);
+    }
+
+    40%, 80% {
+        transform: translateX(10px);
+    }
+}
+
+.shake {
+    animation: shake 0.5s;
+}
+/* Animation */
+
+.text-box {
+    font-size: 14px;
+    color: #E5E9EC;
+    font-weight: 400
+}
+.type-select {
+    height: 40px;
+    font-size: 15px;
+    background-color: #212529;
+    border: 0.5px solid gray;
+    border-radius: 4px;
+}
+
+    .type-select:hover,
+    .type-select:focus {
+        border: 0.5px solid gray;
+        border-radius: 4px;
+    }
+
+/* Open details pages in a popup modal */
+.grid-container .row {
+    margin-left: 17px;
+    margin-right: 17px;
+    border-left: 0.1px solid #444C54;
+}
+
+.content .col {
+    border-top: 0.1px solid #444C54;
+    border-right: 0.1px solid #444C54;
+    min-height: 45px;
+    max-height: auto;
+    padding: 14px;
+    background-color: #212529;
+    font-size: 17px !important;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.value .col {
+    border-top: 0.1px solid #444C54;
+    border-right: 0.1px solid #444C54;
+    padding: 14px;
+    min-height: 45px;
+    max-height: auto;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.comments {
+    border-top: 0.1px solid #444C54;
+    border-right: 0.1px solid #444C54;
+    border-bottom: 0.1px solid #444C54;
+    padding: 14px;
+    min-height: 45px;
+    max-height: auto;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 750px;
+    overflow: hidden;
+}
+
+.bottom-style {
+    border-bottom: 0.1px solid #444C54;
+}

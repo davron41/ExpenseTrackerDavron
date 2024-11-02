@@ -13,12 +13,12 @@
                                  name="search"
                                  placeholder="Search categories"
                                  floatLabelType="Never"
-                                 width="300px"
+                                 width="w-75"
                                  input="onSearchChange"
                                  value="@ViewBag.Search">
                     </ejs-textbox>
                 </div>
-                <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createCategoryModal"> + Category</a>
+                <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createCategoryModal" > + Category</a>
             </div>
         </form>
     </div>
@@ -29,7 +29,6 @@
         <ejs-grid id="categories" dataSource="@Model" allowSorting="true" allowPaging="true">
             <e-grid-pagesettings pageSize="8"></e-grid-pagesettings>
             <e-grid-columns>
-                <e-grid-column headerText="Id" field="Id" width="50px" template="#navigationColumnTemplate"></e-grid-column>
                 <e-grid-column headerText="Category" field="Name" width="150px"></e-grid-column>
                 <e-grid-column headerText="Type" template="#typeColumnTemplate" width="150px"></e-grid-column>
                 <e-grid-column headerText="Actions" template="#actionColumnTemplate" width="100px"></e-grid-column>
@@ -47,9 +46,9 @@
 {
     @await Html.PartialAsync("Modals/Edit", Model.FirstOrDefault())
 }
-
-@await Html.PartialAsync("Modals/Delete")
 @await Html.PartialAsync("Modals/Create")
+@await Html.PartialAsync("Modals/Delete")
+@await Html.PartialAsync("Modals/Details")
 
 <script id="typeColumnTemplate" type="text/x-template">
     ${if(Type == 0)}
@@ -61,19 +60,15 @@
 
 <script id="actionColumnTemplate" type="text/x-template">
     <div class="d-flex flex-row justify-content-start">
-                <button class="btn btn-sm no-a-decoration" onclick="openUpdateModal(${Id})">
+        <button type="button" class="btn btn-sm no-a-decoration" title="Details" onclick="openDetailsModal(${Id})">
+            <i class="bi bi-card-list text-info" style="font-size: 21px;"></i>
+        </button>
+        <button type="button" class="btn btn-sm no-a-decoration" title="edit" onclick="openUpdateModal(${Id})">
             <i class="fa-solid fa-pen fa-lg"></i>
         </button>
-
-        <button class="btn btn-sm no-a-decoration" onclick="openDeleteModal(${Id})">
+        <button class="btn btn-sm no-a-decoration" title="delete" onclick="openDeleteModal(${Id})">
             <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
         </button>
-    </div>
-</script>
-
-<script id="navigationColumnTemplate" type="text/x-template">
-    <div>
-        <a rel="nofollow" href="/categories/details/${Id}">${Id}</a>
     </div>
 </script>
 
@@ -98,7 +93,6 @@
     }
     
 </script>
- 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"> </script>
 
@@ -134,30 +128,30 @@
 </div>
 
 <script>
-    //  input elements
-    const modal = document.getElementById('successModal');
-    const submitBtn = document.querySelectorAll('#submitBtn');
-    const okBtn = document.querySelector('#okBtn');
+    function onSave() {
+        const modal = document.getElementById('successModal');
+        const submitBtn = document.querySelectorAll('#submitBtn');
+        const okBtn = document.querySelector('#okBtn');
 
-    // Method for open success modal
-    submitBtn.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            modal.style.display = 'block';
+        submitBtn.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                modal.style.display = 'block';
 
-            setTimeout(() => {
-                modal.style.display = 'none'
-            }, 3000)
+                setTimeout(() => {
+                    modal.style.display = 'none'
+                }, 3000)
+            })
+
         })
-
-    })
     
-    okBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-    })
-  
-    window.onclick = function (event) {
-        if (event.target === modal) {
+        okBtn.addEventListener('click', () => {
             modal.style.display = 'none';
+        })
+  
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
         }
     }
 </script>
