@@ -10,6 +10,7 @@ using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Enums;
 using ExpenseTracker.Domain.Exceptions;
 using ExpenseTracker.Domain.Interfaces;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ExpenseTracker.Application.Stores;
 
@@ -17,13 +18,13 @@ internal sealed class WalletStore : IWalletStore
 {
     private readonly ICommonRepository _repository;
     private readonly IEmailService _emailService;
-    private readonly NotificationHub _notificationHub;
+    private readonly IHubContext<NotificationHub> _hubContext;
 
-    public WalletStore(ICommonRepository repository, IEmailService emailService, NotificationHub notificationHub)
+    public WalletStore(ICommonRepository repository, IEmailService emailService, IHubContext<NotificationHub> hubContext)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
-        _notificationHub = notificationHub ?? throw new ArgumentNullException(nameof(notificationHub));
+        _hubContext = hubContext ?? throw new ArgumentNullException(nameof(hubContext));
     }
 
     public List<WalletViewModel> GetAll(GetWalletsRequest request)
@@ -102,12 +103,13 @@ internal sealed class WalletStore : IWalletStore
         _repository.SaveChanges();
     }
 
-    public void Share(CreateWalletShareRequest request)
+    public async void Share(CreateWalletShareRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
 
         var wallet = GetAndValidateWallet(request);
-        Task.Run(async () => await _notificationHub.SendMessageAsync(new WalletShareNotification(wallet.Owner.UserName, wallet.Name)));
+        await _hubContext.Clients.All
+            .SendAsync("IncrementNotificationsCount", wallet.Id);
 
         foreach (var userEmail in request.UsersToShare)
         {

@@ -52,9 +52,9 @@
                             <e-combobox-fields value="Id" text="Name"></e-combobox-fields>
                         </ejs-combobox>
                     }
-                    <div style="position:relative;display:inline-block;margin:20px 20px 10px 20px;" id="notificationIcon">
+                    <div style="position:relative;display:inline-block;margin:20px 20px 10px 20px;" id="notification-icon">
                         <i class="fa-solid fa-bell"></i>
-                        <span class="e-badge e-badge-danger e-badge-overlap e-badge-notification">8</span>
+                        <span class="e-badge e-badge-danger e-badge-overlap e-badge-notification" id="notifications-count">8</span>
                     </div>
                     <div style="position:relative;display:inline-block;margin:20px 20px 10px 0px;" >
                         <i class="fa-solid fa-message"></i>
@@ -144,7 +144,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
-    <script src="~/js/notification.js"></script>
     <ejs-scripts></ejs-scripts>
 
     @await RenderSectionAsync("Scripts", required: false)
@@ -152,7 +151,7 @@
 </html>
 
 <script>
-    document.getElementById('notificationIcon').addEventListener('click', function () {
+    document.getElementById('notification-icon').addEventListener('click', function () {
         window.location.href = '@Url.Action("Index", "Notification")';
     });
 </script>

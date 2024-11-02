@@ -2,6 +2,7 @@ using ExpenseTracker.Application.Models;
 using ExpenseTracker.Application.Requests.Auth;
 using ExpenseTracker.Application.Services.Interfaces;
 using ExpenseTracker.Application.Stores.Interfaces;
+using ExpenseTracker.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,15 +13,15 @@ namespace ExpenseTracker.Controllers;
 [AllowAnonymous]
 public class AccountController : Controller
 {
-    private readonly UserManager<IdentityUser<Guid>> _userManager;
-    private readonly SignInManager<IdentityUser<Guid>> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IEmailService _emailService;
     private readonly IWalletStore _walletStore;
     private readonly IHttpContextAccessor _contextAccessor;
 
     public AccountController(
-        UserManager<IdentityUser<Guid>> userManager,
-        SignInManager<IdentityUser<Guid>> signInManager,
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
         IEmailService emailService,
         IWalletStore walletStore,
         IHttpContextAccessor contextAccessor)
@@ -50,7 +51,15 @@ public class AccountController : Controller
             return View(request);
         }
 
-        var result = await _signInManager.PasswordSignInAsync(request.Email, request.Password, true, false);
+        var user = await _userManager.FindByNameAsync(request.UserName);
+
+        if (user is null)
+        {
+            ModelState.AddModelError(string.Empty, "Invalid username or password.");
+            return View(request);
+        }
+
+        var result = await _signInManager.PasswordSignInAsync(user, request.Password, true, false);
 
         if (result.Succeeded)
         {
@@ -79,7 +88,7 @@ public class AccountController : Controller
             return View(request);
         }
 
-        var user = new IdentityUser<Guid> { Id = Guid.NewGuid(), UserName = request.UserName, Email = request.Email };
+        var user = new ApplicationUser { Id = Guid.NewGuid(), UserName = request.UserName, Email = request.Email };
         var result = await _userManager.CreateAsync(user, request.Password);
 
 
