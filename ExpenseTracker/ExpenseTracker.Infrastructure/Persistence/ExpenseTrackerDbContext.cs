@@ -39,6 +39,18 @@ public class ExpenseTrackerDbContext : IdentityDbContext<ApplicationUser, Identi
         modelBuilder.Entity<ApplicationUser>(e =>
         {
             e.ToTable("User");
+            
+            e.Property(x => x.FirstName)
+            .HasMaxLength(250)
+            .IsRequired(false);
+
+            e.Property(x => x.LastName)
+            .HasMaxLength(250)
+            .IsRequired(false);
+
+            e.Property(x => x.Birthdate)
+            .HasColumnType("date")
+            .IsRequired(false);
         });
 
         modelBuilder.Entity<IdentityUserClaim<Guid>>(e =>
