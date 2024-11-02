@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace ExpenseTracker.Infrastructure.Persistence;
 
-public class ExpenseTrackerDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid>
+public class ExpenseTrackerDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
     public virtual DbSet<Category> Categories { get; set; }
     public virtual DbSet<Transfer> Transfers { get; set; }
@@ -36,7 +36,7 @@ public class ExpenseTrackerDbContext : IdentityDbContext<IdentityUser<Guid>, Ide
 
         #region Identity
 
-        modelBuilder.Entity<IdentityUser<Guid>>(e =>
+        modelBuilder.Entity<ApplicationUser>(e =>
         {
             e.ToTable("User");
         });

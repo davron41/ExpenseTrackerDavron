@@ -1,12 +1,12 @@
 using ExpenseTracker.Application.Requests.User;
 using ExpenseTracker.Application.ViewModels.User;
-using Microsoft.AspNetCore.Identity;
+using ExpenseTracker.Domain.Entities;
 
 namespace ExpenseTracker.Application.Mappings;
 
 public static class UserMappings
 {
-    public static UserViewModel ToViewModel(this IdentityUser<Guid> user)
+    public static UserViewModel ToViewModel(this ApplicationUser user)
     {
         return new UserViewModel
         {
@@ -17,9 +17,9 @@ public static class UserMappings
         };
     }
 
-    public static IdentityUser<Guid> ToEntity(this CreateUserRequest request)
+    public static ApplicationUser ToEntity(this CreateUserRequest request)
     {
-        return new IdentityUser<Guid>
+        return new ApplicationUser
         {
             UserName = request.UserName,
             Email = request.Email,
@@ -27,9 +27,9 @@ public static class UserMappings
         };
     }
 
-    public static IdentityUser<Guid> ToEntity(this UpdateUserRequest request)
+    public static ApplicationUser ToEntity(this UpdateUserRequest request)
     {
-        return new IdentityUser<Guid>
+        return new ApplicationUser
         {
             UserName = request.UserName,
             Email = request.Email,

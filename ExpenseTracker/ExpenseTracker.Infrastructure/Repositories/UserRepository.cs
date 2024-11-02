@@ -1,4 +1,5 @@
-﻿using ExpenseTracker.Domain.Exceptions;
+﻿using ExpenseTracker.Domain.Entities;
+using ExpenseTracker.Domain.Exceptions;
 using ExpenseTracker.Domain.Interfaces;
 using ExpenseTracker.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
@@ -14,14 +15,14 @@ internal sealed class UserRepository : IUserRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public List<IdentityUser<Guid>> GetAll()
+    public List<ApplicationUser> GetAll()
     {
         var users = _context.Users.ToList();
 
         return users;
     }
 
-    public IdentityUser<Guid> GetById(Guid id)
+    public ApplicationUser GetById(Guid id)
     {
         var user = _context.Users.FirstOrDefault(u => u.Id == id);
 
@@ -35,7 +36,7 @@ internal sealed class UserRepository : IUserRepository
         return user;
     }
 
-    public IdentityUser<Guid>? GetByEmail(string email)
+    public ApplicationUser? GetByEmail(string email)
     {
         var user = _context.Users.FirstOrDefault(x => x.Email == email);
 
