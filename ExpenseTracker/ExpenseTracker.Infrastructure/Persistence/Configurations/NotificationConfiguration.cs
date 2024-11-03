@@ -1,11 +1,6 @@
 ﻿using ExpenseTracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExpenseTracker.Infrastructure.Persistence.Configurations
 {
@@ -14,12 +9,40 @@ namespace ExpenseTracker.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Notification> builder)
         {
             builder.ToTable(nameof(Notification));
-            builder.HasKey(x => x.Id);
+            builder.HasKey(n => n.Id);
 
-            builder.HasOne(n => n.User)
-                .WithMany()  
-                .HasForeignKey(n => n.FromUserId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder
+                .HasOne(n => n.User)
+                .WithMany(u => u.Notifications)
+                .HasForeignKey(n => n.UserId)
+                .IsRequired();
+
+            builder
+                .Property(n => n.IsRead)
+                .HasDefaultValue(false)
+                .IsRequired();
+
+            builder
+                .Property(n => n.Title)
+                .HasMaxLength(Constants.DEFAULT_STRING_LENGTH)
+                .IsRequired();
+
+            builder
+                .Property(n => n.Body)
+                .HasMaxLength(Constants.MAX_STRING_LENGTH)
+                .IsRequired(false);
+
+            builder
+                .Property(n => n.RedirectUrl)
+                .HasMaxLength(Constants.DEFAULT_STRING_LENGTH)
+                .IsRequired();
+
+            builder
+                .HasQueryFilter(n => !n.IsRead);
+
+            builder
+                .Navigation(n => n.User)
+                .AutoInclude();
         }
     }
 }
