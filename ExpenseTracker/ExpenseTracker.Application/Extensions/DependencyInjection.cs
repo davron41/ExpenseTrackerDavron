@@ -16,7 +16,7 @@ public static class DependencyInjection
         services.AddScoped<ITransferStore, TransferStore>();
         services.AddScoped<IWalletStore, WalletStore>();
         services.AddScoped<IUserStore, UserStore>();
-        services.AddScoped<INotificationStore, NotificationSore>();
+        services.AddScoped<INotificationStore, NotificationStore>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         services.AddSignalR();

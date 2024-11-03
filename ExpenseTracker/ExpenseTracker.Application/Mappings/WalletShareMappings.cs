@@ -11,6 +11,9 @@ public static class WalletShareMappings
         {
             Id = walletShare.Id,
             Date = walletShare.Date,
+            WalletName = walletShare.Wallet.Name,
+            OwnerId = walletShare.Wallet.OwnerId,
+            OwnerName = walletShare.Wallet.Owner.UserName!,
             WalletAccessType = walletShare.AccessType
         };
     }
