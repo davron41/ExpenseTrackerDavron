@@ -12,8 +12,8 @@
             <form asp-action="Login" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="mb-3">
-                    <ejs-textbox id="email" placeholder="Email" ejs-for="Email" floatLabelType="Always"></ejs-textbox>
-                    <span asp-validation-for="Email" class="text-danger fs-6"></span>
+                    <ejs-textbox id="user-name" placeholder="UserName" ejs-for="UserName" floatLabelType="Always"></ejs-textbox>
+                    <span asp-validation-for="UserName" class="text-danger fs-6"></span>
                 </div>
                 <div class="mb-3">
                     <ejs-textbox id="password" placeholder="Password" ejs-for="Password" floatLabelType="Always" type="password"></ejs-textbox>

@@ -11,7 +11,7 @@ public class Wallet : AuditableEntity
     public bool IsMain { get; set; }
 
     public Guid OwnerId { get; set; }
-    public required virtual IdentityUser<Guid> Owner { get; set; }
+    public required virtual ApplicationUser Owner { get; set; }
 
     public virtual ICollection<Transfer> Transfers { get; set; }
     public virtual ICollection<WalletShare> Shares { get; set; }

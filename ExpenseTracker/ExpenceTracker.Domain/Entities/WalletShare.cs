@@ -14,5 +14,5 @@ public class WalletShare : AuditableEntity
     public required virtual Wallet Wallet { get; set; }
 
     public Guid UserId { get; set; }
-    public required virtual IdentityUser<Guid> User { get; set; }
+    public required virtual ApplicationUser User { get; set; }
 }

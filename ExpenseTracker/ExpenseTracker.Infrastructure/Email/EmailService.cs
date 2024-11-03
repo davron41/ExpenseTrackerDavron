@@ -79,10 +79,10 @@ public class EmailService : IEmailService
     private MimeMessage CreateEmailMessage(EmailMessage emailMessage, string templateName, UserInfo? userInfo = null)
     {
         //string templatePath = Path.Combine(_env.ContentRootPath, "Email", "Templates", $"{templateName}.html");
-        var templatePath = Path.Combine(AppContext.BaseDirectory, "Email/Templates", templateName);
+        var templatePath = Path.Combine(AppContext.BaseDirectory, "Email\\Templates", templateName + ".html");
         var body = File.ReadAllText(templatePath)
                        .Replace("{{user_name}}", emailMessage.Username)
-                       .Replace("{{user_email}}", emailMessage.Username)
+                       .Replace("{{user_email}}", emailMessage.To)
                        .Replace("{{action_url}}", emailMessage.FallbackUrl)
                        .Replace("{{trial_start_date}}", DateTime.Now.ToString("dd MMMM, yyyy"))
                        .Replace("{{trial_end_date}}", DateTime.Now.AddMonths(1).ToString("dd MMMM, yyyy"))
@@ -92,6 +92,7 @@ public class EmailService : IEmailService
         {
             body = body.Replace("{{operating_system}}", userInfo.OS)
                        .Replace("{{browser_name}}", userInfo.Browser);
+                     
         }
 
         var message = new MimeMessage();

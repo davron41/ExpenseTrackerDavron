@@ -1,5 +1,4 @@
 ﻿using ExpenseTracker.Domain.Common;
-using Microsoft.AspNetCore.Identity;
 
 namespace ExpenseTracker.Domain.Entities;
 
@@ -10,5 +9,5 @@ public class Notification : AuditableEntity
     public bool IsRead { get; set; }
     public Guid FromUserId { get; set; }
     public Guid ToUserId { get; set; }
-    public required virtual IdentityUser<Guid> User { get; set; }
+    public required virtual ApplicationUser User { get; set; }
 }

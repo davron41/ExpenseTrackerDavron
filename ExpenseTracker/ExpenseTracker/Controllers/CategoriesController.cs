@@ -30,7 +30,6 @@ public class CategoriesController : Controller
         return Json(category);
     }
 
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Create([FromForm] CreateCategoryRequest request)
@@ -51,12 +50,8 @@ public class CategoriesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit([FromRoute] int id, [FromForm] UpdateCategoryRequest request)
+    public IActionResult Edit([FromForm] UpdateCategoryRequest request)
     {
-        if (id != request.Id)
-        {
-            return Json(new { success = false, message = "Route id does not match with body id." });
-        }
 
         if (!ModelState.IsValid)
         {

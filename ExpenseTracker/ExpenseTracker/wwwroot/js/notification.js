@@ -1,19 +1,30 @@
 ﻿"use strict";
 
-console.log("hub");
-
-var connection = new signalR.HubConnectionBuilder()
+let isConnected = false;
+const connection = new signalR.HubConnectionBuilder()
     .withUrl("/notification-hub")
     .build();
 
-connection.on("WalletShareRequest", function (message) {
-    console.log("message received");
+connection.on("IncrementNotificationsCount", function (message) {
     console.log(message);
-    alert(`${message.ownerName} invites you to collaborate on Wallet ${message.walletName}`);
+    const notificationsElement = document.getElementById('notifications-count');
+    const notificationsCount = Number(notificationsElement.innerHTML);
+
+    console.log(notificationsCount);
+
+    if (notificationsCount) {
+        const total = notificationsCount + 1;
+        notificationsElement.innerHTML = total.toString();
+    }
 });
 
-connection.start().then(function () {
-    console.log("connection started...");
-}).catch(function (err) {
-    return console.error(err.toString());
-});
+var isConnec = false;
+
+if (!isConnected) {
+    connection.start().then(function () {
+        isConnected = true;
+        console.log("connection started...");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+}
