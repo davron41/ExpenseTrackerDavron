@@ -4,19 +4,27 @@ using ExpenseTracker.Infrastructure.Persistence;
 
 namespace ExpenseTracker.Infrastructure.Repositories;
 
-class NotificationRepository : INotificationRepository
+internal class NotificationRepository : RepositoryBase<Notification>, INotificationRepository
 {
-    private readonly ExpenseTrackerDbContext _context;
-
     public NotificationRepository(ExpenseTrackerDbContext context)
+        : base(context)
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public List<Notification> GetAll()
+    public override List<Notification> GetAll(Guid userId)
     {
-        var notifications = _context.Notifications.ToList();
-
+        var notifications = _context.Notifications
+            .Where(x => x.UserId == userId)
+            .ToList();
+        
         return notifications;
+    }
+
+    private void Do()
+    {
+        foreach (var notification in GetAll(Guid.NewGuid()))
+        {
+
+        }
     }
 }

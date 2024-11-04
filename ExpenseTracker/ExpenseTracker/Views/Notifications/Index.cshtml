@@ -21,13 +21,13 @@
                 <input type="checkbox" class="form-check-input me-3 notification-checkbox">
                 <i class="fa-solid fa-bell notification-icon me-3"></i>
                 <div class="details flex-grow-1">
-                    <a href="#" class="text-decoration-none text-white">
+                    <a href="@notification.RedirectUrl" class="text-decoration-none text-white">
                         <strong>@notification.Title</strong> <br />- @notification.Body
                     </a>
                 </div>
                 <div class="notification-right ms-auto d-flex flex-column align-items-end">
-                    <span class="badge bg-@(notification.IsRead ? "success" : "primary") mb-1">
-                        @(notification.IsRead ? "Read" : "Unread")
+                    <span class="badge bg-warning mb-1">
+                        Pending
                     </span>
                     <div class="text-muted small">
                         @notification.Date.ToString("MMM dd, yyyy h:mm tt")

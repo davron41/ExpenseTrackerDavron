@@ -1,4 +1,5 @@
 ﻿using ExpenseTracker.Domain.Entities;
+using ExpenseTracker.Domain.Exceptions;
 using ExpenseTracker.Domain.Interfaces;
 using ExpenseTracker.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -20,5 +21,22 @@ internal sealed class WalletShareRepository : RepositoryBase<WalletShare>, IWall
             .ToList();
 
         return walletShares;
+    }
+
+    public override WalletShare GetById(int id)
+    {
+        var walletShare = _context.WalletShares
+            .AsNoTracking()
+            .Where(x => x.Id == id)
+            .Include(x => x.Wallet)
+            .ThenInclude(x => x.Owner)
+            .FirstOrDefault();
+
+        if (walletShare is null)
+        {
+            throw new EntityNotFoundException($"Wallet share with id:{id} is not found");
+        }
+
+        return walletShare;
     }
 }

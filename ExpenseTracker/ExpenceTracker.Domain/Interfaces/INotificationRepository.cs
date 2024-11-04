@@ -2,7 +2,6 @@
 
 namespace ExpenseTracker.Domain.Interfaces;
 
-public interface INotificationRepository
+public interface INotificationRepository : IRepositoryBase<Notification>
 {
-    List<Notification> GetAll();
 }
