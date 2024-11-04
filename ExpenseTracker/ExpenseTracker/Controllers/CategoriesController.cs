@@ -55,9 +55,11 @@ public class CategoriesController : Controller
 
         if (!ModelState.IsValid)
         {
-            var errors = ModelState.Values.SelectMany(v => v.Errors)
-                                          .Select(e => e.ErrorMessage)
-                                          .ToList();
+            var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            
             return Json(new { success = false, errors });
         }
 
@@ -81,7 +83,7 @@ public class CategoriesController : Controller
     /// <param name="search"></param>
     /// <returns>List of filtered categories</returns>
     [Route("getCategories")]
-    public ActionResult<CategoryViewModel> GetCategories([FromQuery] GetCategoriesRequest request)
+    public ActionResult<List<CategoryViewModel>> GetCategories([FromQuery] GetCategoriesRequest request)
     {
         var categories = _store.GetAll(request);
 

@@ -7,5 +7,12 @@ namespace ExpenseTracker.Domain.Entities
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public DateTime? Birthdate { get; set; }
+
+        public virtual ICollection<Notification> Notifications { get; set; }
+
+        public ApplicationUser()
+        {
+            Notifications = [];
+        }
     }
 }

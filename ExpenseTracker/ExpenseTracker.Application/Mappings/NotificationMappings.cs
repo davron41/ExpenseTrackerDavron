@@ -12,7 +12,8 @@ public static class NotificationMappings
             Id = notification.Id,
             Body = notification.Body,
             Title = notification.Title,
-            IsRead = notification.IsRead
+            RedirectUrl = notification.RedirectUrl,
+            Date = notification.CreatedAt,
         };
     }
 }
