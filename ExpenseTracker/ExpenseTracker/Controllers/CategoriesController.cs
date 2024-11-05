@@ -45,7 +45,7 @@ public class CategoriesController : Controller
 
         _store.Create(request);
 
-        return Json(new { success = true });
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpPost]
@@ -65,7 +65,7 @@ public class CategoriesController : Controller
 
         _store.Update(request);
 
-        return Json(new { success = true });
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpDelete, ActionName("Delete")]
@@ -74,12 +74,12 @@ public class CategoriesController : Controller
     {
         _store.Delete(request);
 
-        return Json(new { success = true });
+        return RedirectToAction(nameof(Index));
     }
 
     /// <summary>
     /// Filters categories
-    /// </summary>
+    /// </summary>  
     /// <param name="search"></param>
     /// <returns>List of filtered categories</returns>
     [Route("getCategories")]
