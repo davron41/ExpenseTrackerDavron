@@ -28,7 +28,7 @@ public class WalletsController : Controller
     {
         var wallet = _store.GetById(request);
 
-        return View(wallet);
+        return Json(wallet);
     }
 
     public IActionResult Create()
@@ -47,7 +47,8 @@ public class WalletsController : Controller
 
         var createdWallet = _store.Create(request);
 
-        return RedirectToAction(nameof(Index));
+        
+        return Json(new { success = true });
     }
 
     public IActionResult Edit([FromRoute] WalletRequest request)
