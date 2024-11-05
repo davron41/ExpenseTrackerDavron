@@ -1,6 +1,5 @@
 ﻿using ExpenseTracker.Domain.Common;
 using ExpenseTracker.Domain.Enums;
-using Microsoft.AspNetCore.Identity;
 
 namespace ExpenseTracker.Domain.Entities;
 
@@ -13,7 +12,7 @@ public class Category : AuditableEntity
     public Guid UserId { get; set; }
     public required ApplicationUser User { get; set; }
 
-    public virtual IEnumerable<Transfer> Transfers { get; set; }
+    public virtual ICollection<Transfer> Transfers { get; set; }
 
     public Category()
     {

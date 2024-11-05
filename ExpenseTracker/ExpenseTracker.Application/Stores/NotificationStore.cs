@@ -6,19 +6,20 @@ using ExpenseTracker.Domain.Interfaces;
 
 namespace ExpenseTracker.Application.Stores;
 
-public class NotificationSore : INotificationStore
+public class NotificationStore : INotificationStore
 {
     private readonly ICommonRepository _commonRepository;
 
-    public NotificationSore(ICommonRepository commonRepository)
+    public NotificationStore(ICommonRepository commonRepository)
     {
         _commonRepository = commonRepository ?? throw new ArgumentNullException(nameof(commonRepository));
     }
+
     public List<NotificationViewModel> GetAll(GetNotificationsRequest request)
     {
         ArgumentNullException.ThrowIfNull(nameof(request));
-
-        var notifications = _commonRepository.Notifications.GetAll();
+        
+        var notifications = _commonRepository.Notifications.GetAll(request.UserId);
 
         var viewModels = notifications
             .Select(x => x.ToViewModel())
