@@ -6,6 +6,7 @@ using ExpenseTracker.Application.Requests.WalletShare;
 using ExpenseTracker.Application.Services.Interfaces;
 using ExpenseTracker.Application.Stores.Interfaces;
 using ExpenseTracker.Application.ViewModels.Wallet;
+using ExpenseTracker.Application.ViewModels.WalletShare;
 using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Enums;
 using ExpenseTracker.Domain.Exceptions;
@@ -171,5 +172,24 @@ internal sealed class WalletStore : IWalletStore
         }
 
         return wallet;
+    }
+
+    public WalletShareViewModel GetWalletShareById(WalletShareRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var wallet = _repository.WalletShares.GetById(request.Id);
+        
+        if (wallet is null)
+        {
+            throw new EntityNotFoundException($"Wallet share with id: {request.Id} is not found.");
+        }
+
+        wallet.Wallet = _repository.Wallets.GetById(wallet.WalletId);
+        wallet.User = _repository.Users.GetById(wallet.UserId);
+
+        var viewModel = wallet.ToViewModel();
+
+        return viewModel;
     }
 }
