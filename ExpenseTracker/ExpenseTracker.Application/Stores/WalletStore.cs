@@ -105,6 +105,31 @@ internal sealed class WalletStore : IWalletStore
         _repository.SaveChanges();
     }
 
+    public WalletShareViewModel GetWalletShareById(WalletShareRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var wallet = _repository.WalletShares.GetById(request.Id);
+
+        if (wallet is null)
+        {
+            throw new EntityNotFoundException($"Wallet share with id: {request.Id} is not found.");
+        }
+
+        if (wallet.UserId == request.UserId) 
+        {
+            // throw exception
+        }
+
+        wallet.Wallet = _repository.Wallets.GetById(wallet.WalletId);
+        wallet.User = _repository.Users.GetById(wallet.UserId);
+        wallet.Wallet.Owner = _repository.Users.GetById(wallet.Wallet.OwnerId);
+
+        var viewModel = wallet.ToViewModel();
+
+        return viewModel;
+    }
+
     public async void Share(CreateWalletShareRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -126,20 +151,31 @@ internal sealed class WalletStore : IWalletStore
             {
                 var share = new WalletShare
                 {
-                    User = user,
-                    Wallet = wallet,
+                    User = null!,
+                    UserId = user.Id,
+                    Wallet = null!,
+                    WalletId = wallet.Id,
                     AccessType = WalletAccessType.ReadAndWrite,
                     Date = DateTime.UtcNow,
                     IsAccepted = false,
                 };
 
                 _repository.WalletShares.Create(share);
+                _repository.SaveChanges();
+
+                var notification = new Notification
+                {
+                    IsRead = false,
+                    Title = "Wallet Collaboration Invitation",
+                    Body = $"{user.UserName} invites you to collaborate on Wallet: {wallet.Name}.",
+                    RedirectUrl = $"/wallets/shares/{share.Id}",
+                    User = user,
+                };
+
+                _repository.Notifications.Create(notification);
+                _repository.SaveChanges();
             }
         }
-
-        _repository.SaveChanges();
-
-
     }
 
     private static CreateWalletRequest GetDefaultWallet(Guid userId) => new(
@@ -172,24 +208,5 @@ internal sealed class WalletStore : IWalletStore
         }
 
         return wallet;
-    }
-
-    public WalletShareViewModel GetWalletShareById(WalletShareRequest request)
-    {
-        ArgumentNullException.ThrowIfNull(request);
-
-        var wallet = _repository.WalletShares.GetById(request.Id);
-        
-        if (wallet is null)
-        {
-            throw new EntityNotFoundException($"Wallet share with id: {request.Id} is not found.");
-        }
-
-        wallet.Wallet = _repository.Wallets.GetById(wallet.WalletId);
-        wallet.User = _repository.Users.GetById(wallet.UserId);
-
-        var viewModel = wallet.ToViewModel();
-
-        return viewModel;
     }
 }
