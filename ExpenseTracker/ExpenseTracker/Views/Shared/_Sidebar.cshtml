@@ -50,7 +50,6 @@
     });
 }
 
-
 <ejs-sidebar id="sidebar" width="290px" enableDock dockSize="100px"
              target=".dock-target" enableGestures="false">
     <e-content-template>
@@ -80,10 +79,33 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        dockBar = document.getElementById('sidebar').ej2_instances[0];
+        const dockBar = document.getElementById('sidebar').ej2_instances[0];
+        const mainContent = document.querySelector('.main-content');
+
+        checkWidthAndToggle();
+
+        window.addEventListener('resize', checkWidthAndToggle);
+
         document.getElementById('sidebar-toggler').onclick = function () {
             dockBar.toggle();
+            mainContent.classList.toggle('sidebar-collapsed');
         };
+
+        function checkWidthAndToggle() {
+            const screenWidth = window.innerWidth;
+
+            if (screenWidth < 768) {
+                if (dockBar.isOpen) {
+                    dockBar.toggle();
+                    mainContent.classList.add('sidebar-collapsed');
+                }
+            } else {
+                if (!dockBar.isOpen) {
+                    dockBar.toggle();
+                    mainContent.classList.remove('sidebar-collapsed');
+                }
+            }
+        }
     });
 </script>
 
