@@ -68,7 +68,7 @@
         <div class="profile-wrapper">
             <img class="profile-pic" src="~/profile.jpg" />
             <div class="titles d-flex flex-column ps-3">
-                <h6 class="mb-0">@Model?.UserName</h6>
+                <h6 class="mb-0 ellipsis" title="@Model?.UserName">@Model?.UserName</h6>
                 <span class="text-muted"></span>
             </div>
         </div>
@@ -88,4 +88,13 @@
         };
     });
 </script>
+
+<style>
+    .ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 150px;
+    }
+</style>
 
