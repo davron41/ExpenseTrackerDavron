@@ -1,4 +1,10 @@
-﻿@{
+﻿@inject ExpenseTracker.Application.Services.Interfaces.ICurrentUserService currentUserService;
+
+@{
+    var userName = currentUserService.GetCurrentUserName();
+}
+
+@{
     List<Object> menuItems = new List<Object>();
 
     menuItems.Add(new
@@ -65,7 +71,7 @@
         <div class="profile-wrapper">
             <img class="profile-pic" src="~/profile.jpg" />
             <div class="titles d-flex flex-column ps-3">
-                <h6 class="mb-0">Wallet App</h6>
+                <h6 class="mb-0 ellipsis" title="@userName">@userName</h6>
                 <span class="text-muted"></span>
             </div>
         </div>
@@ -106,4 +112,13 @@
         }
     });
 </script>
+
+<style>
+    .ellipsis {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 150px;
+    }
+</style>
 
