@@ -94,16 +94,14 @@
         function checkWidthAndToggle() {
             const screenWidth = window.innerWidth;
 
-            if (screenWidth < 768) {
-                if (dockBar.isOpen) {
-                    dockBar.toggle();
-                    mainContent.classList.add('sidebar-collapsed');
-                }
-            } else {
-                if (!dockBar.isOpen) {
-                    dockBar.toggle();
-                    mainContent.classList.remove('sidebar-collapsed');
-                }
+            if (screenWidth < 768 && dockbar.isOpen) {
+                dockBar.toggle();
+                mainContent.classList.add('sidebar-collapsed');
+                return;
+            }
+            if (!dockBar.isOpen) {
+                dockBar.toggle();
+                mainContent.classList.remove('sidebar-collapsed');
             }
         }
     });
