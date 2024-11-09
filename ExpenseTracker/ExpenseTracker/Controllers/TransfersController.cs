@@ -1,3 +1,4 @@
+using ExpenseTracker.Application.Mappings;
 using ExpenseTracker.Application.Requests.Category;
 using ExpenseTracker.Application.Requests.Common;
 using ExpenseTracker.Application.Requests.Transfer;
@@ -80,7 +81,7 @@ public class TransfersController : Controller
         {
             if (!TryValidateFile(ModelState, attachment))
             {
-                PopulateViewBag(request, request.CategoryId);
+                PopulateViewBag(request, request.CategoryId , request.WalletId);
 
                 return View(request);
             }
@@ -88,26 +89,28 @@ public class TransfersController : Controller
 
         var createdTransfer = _transferStore.Create(request, attachments);
 
-        return RedirectToAction(nameof(Details), new { id = createdTransfer.Id });
+        return RedirectToAction(nameof(Index));
     }
 
     public IActionResult Edit([FromRoute] TransferRequest request)
     {
         var transfer = _transferStore.GetById(request);
 
-        PopulateViewBag(request, transfer.Category.Id);
+        PopulateViewBag(request, transfer.Category.Id , transfer.Wallet.Id);
 
-        return View(transfer);
+        var transferResult = transfer.ToUpdateRequest();
+
+        return View(transferResult);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit([FromRoute] int id, [FromBody] UpdateTransferRequest request)
+    public IActionResult Edit([FromForm] UpdateTransferRequest request , [FromForm] List<IFormFile> attachments)
     {
-        if (id != request.Id)
-        {
-            return BadRequest("Route id does not match with body id.");
-        }
+        //if ()
+        //{
+        //    return BadRequest("Route id does not match with body id.");
+        //}
 
         if (!ModelState.IsValid)
         {
@@ -189,7 +192,7 @@ public class TransfersController : Controller
             ? categories.First(x => x.Id == categoryId.Value)
             : categories.FirstOrDefault();
         var defaultWallet = walletId.HasValue
-            ? wallets.First(x => x.Id == walletId)
+            ? wallets.First(x => x.Id == walletId.Value)
             : wallets.FirstOrDefault();
 
         ViewBag.Wallets = wallets;

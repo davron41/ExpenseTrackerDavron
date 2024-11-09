@@ -30,7 +30,7 @@ public class WalletsController : Controller
     {
         var wallet = _store.GetById(request);
 
-        return View(wallet);
+        return Json(wallet);
     }
 
     public IActionResult Create()
@@ -49,7 +49,8 @@ public class WalletsController : Controller
 
         var createdWallet = _store.Create(request);
 
-        return RedirectToAction(nameof(Index));
+        
+        return Json(new { success = true });
     }
 
     public IActionResult Edit([FromRoute] WalletRequest request)
@@ -108,6 +109,13 @@ public class WalletsController : Controller
         _store.Share(request);
 
         return RedirectToAction(nameof(Index));
+    }
+
+    public IActionResult Shares([FromRoute] WalletShareRequest request)
+    {
+        var walletShare = _store.GetWalletShareById(request);
+
+        return View(walletShare);
     }
 
     /// <summary>
