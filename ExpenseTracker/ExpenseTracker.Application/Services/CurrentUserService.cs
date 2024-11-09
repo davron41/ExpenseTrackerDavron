@@ -38,6 +38,7 @@ internal sealed class CurrentUserService : ICurrentUserService
         {
             throw new InvalidOperationException($"Could not parse user username: {userName}.");
         }
+        
         return userName;
     }
 }
