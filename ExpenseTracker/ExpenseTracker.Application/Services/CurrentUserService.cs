@@ -27,6 +27,7 @@ internal sealed class CurrentUserService : ICurrentUserService
 
         return result;
     }
+    
     public string GetCurrentUserName()
     {
         var user = (_contextAccessor.HttpContext?.User)
