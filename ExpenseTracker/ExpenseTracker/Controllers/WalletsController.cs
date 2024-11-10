@@ -4,7 +4,6 @@ using ExpenseTracker.Application.Stores.Interfaces;
 using ExpenseTracker.Application.ViewModels.Wallet;
 using ExpenseTracker.Application.ViewModels.WalletShare;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Common;
 
 namespace ExpenseTracker.Controllers;
 

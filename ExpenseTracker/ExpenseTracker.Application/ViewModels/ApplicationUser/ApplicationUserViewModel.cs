@@ -1,6 +1,6 @@
-namespace ExpenseTracker.Application.ViewModels.User;
+namespace ExpenseTracker.Application.ViewModels.ApplicationUser;
 
-public class UserViewModel
+public class ApplicationUserViewModel
 {
     public Guid Id { get; set; }
     public string UserName { get; set; }

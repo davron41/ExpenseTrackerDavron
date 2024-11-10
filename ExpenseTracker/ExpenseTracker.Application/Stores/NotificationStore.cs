@@ -1,7 +1,6 @@
 ﻿using ExpenseTracker.Application.Mappings;
 using ExpenseTracker.Application.Requests.Common;
 using ExpenseTracker.Application.Requests.Notification;
-using ExpenseTracker.Application.Requests.User;
 using ExpenseTracker.Application.Stores.Interfaces;
 using ExpenseTracker.Application.ViewModels.Notification;
 using ExpenseTracker.Domain.Interfaces;
@@ -30,7 +29,7 @@ public class NotificationStore : INotificationStore
         return viewModels;
     }
 
-    public int CountNotifications(UserRequestId request)
+    public int CountNotifications(UserRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
 
