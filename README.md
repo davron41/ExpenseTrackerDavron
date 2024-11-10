@@ -60,7 +60,6 @@ To set up the project locally, follow these steps:
      "SyncfusionKey": "YourSyncfusionLicenseKeyHere"
    }
 
-   # For enhanced security, consider storing sensitive data such as passwords and API keys in environment variables or a secure secrets manager instead of hardcoding them in the configuration file.
 5. **Run the application:**
    ```bash
    dotnet run
