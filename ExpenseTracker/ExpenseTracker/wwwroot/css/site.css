@@ -151,6 +151,7 @@ body {
 
     #menu .e-menu-item:not(.e-separator) {
         height: 50px;
+        margin-bottom: 5px;
         border-radius: 4px;
     }
 

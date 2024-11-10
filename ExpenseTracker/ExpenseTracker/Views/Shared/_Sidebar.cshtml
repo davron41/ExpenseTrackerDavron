@@ -100,12 +100,12 @@
         function checkWidthAndToggle() {
             const screenWidth = window.innerWidth;
 
-            if (screenWidth < 768 && dockbar.isOpen) {
+            if (screenWidth < 768 && dockBar.isOpen) {
                 dockBar.toggle();
                 mainContent.classList.add('sidebar-collapsed');
-                return;
             }
-            if (!dockBar.isOpen) {
+            
+            if (screenWidth >= 768 &&!dockBar.isOpen) {
                 dockBar.toggle();
                 mainContent.classList.remove('sidebar-collapsed');
             }
